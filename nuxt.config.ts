@@ -9,14 +9,20 @@ export default defineNuxtConfig({
     postcss: {
       postcssOptions: {
         plugins: {
-          tailwindcss: {},
+          tailwindcss: {
+            cssPath: '~/assets/css/tailwind.css',
+            configPath: 'tailwind.config.js',
+            exposeConfig: false,
+            config: {
+              content: ['content/**/**.md'],
+            },
+            injectPosition: 0,
+            viewer: true,
+          },
           autoprefixer: {},
         },
       },
     },
   },
-
-  css: ['@/assets/css/main.css'],
-
   modules: ['@nuxtjs/tailwindcss'],
 })
