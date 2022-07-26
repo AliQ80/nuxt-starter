@@ -17,5 +17,8 @@
         validation="required|matches:/^@[a-zA-Z]+$/|length:5"
         value="@useFormKit" />
     </div>
+    <div class="flex justify-center items-center m-10">
+      <TestComp />
+    </div>
   </div>
 </template>
