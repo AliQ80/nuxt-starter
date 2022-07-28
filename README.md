@@ -1,5 +1,15 @@
 # Nuxt 3 Starter
 
+---
+
+- Nuxt 3
+- Tailwind 3
+- DaisyUI
+- FormKit
+- pinia
+
+---
+
 Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
 
 ##### (Useing yarn is recomended)
