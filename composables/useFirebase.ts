@@ -45,10 +45,10 @@ export const initUser = async () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid
-      console.log(user)
+      console.log('Auth changed', user)
     } else {
       // User is signed out
-      // ...
+      console.log('Auth changed', user)
     }
   })
   return credentials
@@ -57,6 +57,6 @@ export const initUser = async () => {
 export const signOutUser = async () => {
   const auth = getAuth()
   const result = await auth.signOut()
-  console.log('sign out: ', result)
+  // console.log('sign out: ', result)
   return result
 }
