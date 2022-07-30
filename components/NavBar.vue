@@ -1,14 +1,17 @@
 <script setup lang="ts">
+
+const credentials = ref()
+
 const signIn = async () => {
     const email = 'ali@google.com'
     const password = '123456'
-    const credentials = await signInUser(email, password)
-    console.log('credentials: ', credentials);
+    credentials.value = await signInUser(email, password)
+    // console.log('credentials: ', credentials);
 }
 
 const signOut = async () => {
-    const result = await signOutUser()
-    console.log('result: ', result);
+    credentials.value = await signOutUser()
+    // console.log('result: ', result);
 }
 
 </script>
@@ -44,4 +47,7 @@ const signOut = async () => {
             <a class="btn btn-secondary mx-2">signup</a>
         </div>
     </div>
+    <pre>
+            {{ credentials }}
+        </pre>
 </template>
