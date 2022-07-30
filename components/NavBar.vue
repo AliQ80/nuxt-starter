@@ -1,3 +1,21 @@
+<script setup lang="ts">
+
+const credentials = ref()
+
+const signIn = async () => {
+    const email = 'ali@google.com'
+    const password = '123456'
+    credentials.value = await signInUser(email, password)
+    // console.log('credentials: ', credentials);
+}
+
+const signOut = async () => {
+    credentials.value = await signOutUser()
+    // console.log('result: ', result);
+}
+
+</script>
+
 <template>
     <div class="navbar bg-base-200">
         <div class="navbar-start">
@@ -24,8 +42,12 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <a class="btn btn-primary mx-4">Login</a>
-            <a class="btn btn-secondary mx-4">signup</a>
+            <a class="btn btn-primary mx-2" @click="signIn">Login</a>
+            <a class="btn btn-info mx-2" @click="signOut">Logout</a>
+            <a class="btn btn-secondary mx-2">signup</a>
         </div>
     </div>
+    <pre>
+            {{ credentials }}
+        </pre>
 </template>
