@@ -6,11 +6,16 @@ export const useFirebaseUserStore = defineStore('userStore', {
     return {
       // all these properties will have their type inferred automatically
       user: {},
+      email: '',
     }
   },
   actions: {},
 
-  getters: {},
+  getters: {
+    //   getUserEmail: (state) => {
+    //     return (userEmail: string) => state.user.email
+    //   },
+  },
 })
 
 if (import.meta.hot) {

@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { useFirebaseUserStore } from '~~/stores/userState'
+import { useFirebaseUserStore } from '~~/stores/userStore'
 
 const firebaseUser = useFirebaseUserStore()
 const credentials = ref()
+const userEmail = ref()
 
 const signIn = async () => {
     const email = 'ali@google.com'
     const password = '123456'
     credentials.value = await signInUser(email, password)
     firebaseUser.user = credentials.value
-
-    console.log(firebaseUser.user);
 }
 
 const signOut = async () => {
@@ -18,8 +17,14 @@ const signOut = async () => {
     firebaseUser.user = credentials.value
 
     console.log(firebaseUser.user);
+    console.log('credentials email', credentials.value);
 }
 
+
+definePageMeta({
+    middleware: ["auth"]
+    // or middleware: 'auth'
+})
 </script>
 
 <template>
@@ -48,24 +53,30 @@ const signOut = async () => {
             </ul>
         </div>
         <div class="navbar-end">
-            <div v-if="!firebaseUser.user">
-                <a class="btn btn-secondary btn-sm w-24 h-10 mx-2">signup</a>
-                <a class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</a>
-            </div>
-            <div v-else>
-                <a class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</a>
-            </div>
+            <client-only>
+                <div v-if="firebaseUser.user">
+                    {{ firebaseUser.email }}
+                </div>
 
+
+
+                <div v-if="!firebaseUser.user">
+                    <a class="btn btn-secondary btn-sm w-24 h-10 mx-2">signup</a>
+                    <a class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</a>
+                </div>
+                <div v-else>
+                    <a class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</a>
+                </div>
+            </client-only>
         </div>
     </div>
-
-    <div v-if="firebaseUser.user">
+    <!-- <div v-if="firebaseUser.user">
         <pre>
                 {{ firebaseUser.user }}
         </pre>
     </div>
     <div v-else>
         user is logged out
-    </div>
+    </div> -->
 
 </template>
