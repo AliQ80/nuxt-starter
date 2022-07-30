@@ -7,6 +7,8 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 
+import { useFirebaseUserStore } from '~~/stores/userState'
+
 export const creatUser = async (email: string, password: string) => {
   const auth = getAuth()
   const credentials = await createUserWithEmailAndPassword(
@@ -40,16 +42,20 @@ export const signInUser = async (email: string, password: string) => {
 
 export const initUser = async () => {
   const auth = getAuth()
-  const credentials = await onAuthStateChanged(auth, (user) => {
+  const firebaseUser = useFirebaseUserStore()
+  firebaseUser.user = auth.currentUser
+
+  const credentials = onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid
-      console.log(user)
+      console.log('Auth changed', user)
     } else {
       // User is signed out
-      // ...
+      console.log('Auth changed', user)
     }
+    firebaseUser.user = user
   })
   return credentials
 }
@@ -57,6 +63,6 @@ export const initUser = async () => {
 export const signOutUser = async () => {
   const auth = getAuth()
   const result = await auth.signOut()
-  console.log('sign out: ', result)
+  // console.log('sign out: ', result)
   return result
 }
