@@ -1,17 +1,23 @@
 <script setup lang="ts">
+import { useFirebaseUserStore } from '~~/stores/userState'
 
+const firebaseUser = useFirebaseUserStore()
 const credentials = ref()
 
 const signIn = async () => {
     const email = 'ali@google.com'
     const password = '123456'
     credentials.value = await signInUser(email, password)
-    // console.log('credentials: ', credentials);
+    firebaseUser.user = credentials.value
+
+    console.log(firebaseUser.user);
 }
 
 const signOut = async () => {
     credentials.value = await signOutUser()
-    // console.log('result: ', result);
+    firebaseUser.user = credentials.value
+
+    console.log(firebaseUser.user);
 }
 
 </script>
@@ -42,12 +48,24 @@ const signOut = async () => {
             </ul>
         </div>
         <div class="navbar-end">
-            <a class="btn btn-primary mx-2" @click="signIn">Login</a>
-            <a class="btn btn-info mx-2" @click="signOut">Logout</a>
-            <a class="btn btn-secondary mx-2">signup</a>
+            <div v-if="!firebaseUser.user">
+                <a class="btn btn-secondary btn-sm w-24 h-10 mx-2">signup</a>
+                <a class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</a>
+            </div>
+            <div v-else>
+                <a class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</a>
+            </div>
+
         </div>
     </div>
-    <pre>
-            {{ credentials }}
+
+    <div v-if="firebaseUser.user">
+        <pre>
+                {{ firebaseUser.user }}
         </pre>
+    </div>
+    <div v-else>
+        user is logged out
+    </div>
+
 </template>

@@ -32,6 +32,23 @@ export default defineNuxtConfig({
       },
     },
   },
-  buildModules: ['@pinia/nuxt'],
+  buildModules: [
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          // automatically imports `usePinia()`
+          'defineStore',
+          // automatically imports `usePinia()` as `usePiniaStore()`
+          ['defineStore', 'definePiniaStore'],
+        ],
+      },
+    ],
+  ],
   modules: ['@nuxtjs/tailwindcss', '@formkit/nuxt'],
+  app: {
+    head: {
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    },
+  },
 })
