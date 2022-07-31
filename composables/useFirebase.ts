@@ -51,10 +51,11 @@ export const initUser = async () => {
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid
       firebaseUser.email = user.email
-      console.log('Auth changed', user)
+      // console.log('Auth changed', user)
     } else {
       // User is signed out
-      console.log('Auth changed', user)
+      // console.log('Auth changed', user)
+      firebaseUser.email = ''
     }
     firebaseUser.user = user
   })

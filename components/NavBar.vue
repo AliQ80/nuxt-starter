@@ -15,11 +15,6 @@ const signOut = async () => {
     credentials.value = await signOutUser()
     firebaseUser.user = credentials.value
 }
-
-definePageMeta({
-    middleware: ["auth"]
-    // or middleware: 'auth'
-})
 </script>
 
 <template>
@@ -35,16 +30,27 @@ definePageMeta({
                 </label>
                 <ul tabindex="0"
                     class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact us</a></li>
+                    <li>
+                        <NuxtLink to="/about">About</NuxtLink>
+                    </li>
+                    <li>
+                        <NuxtLink to="/contact">Contact us</NuxtLink>
+                    </li>
                 </ul>
             </div>
-            <a href="/" class="btn btn-ghost normal-case text-xl">daisyUI</a>
+            <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">daisyUI</NuxtLink>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal p-0">
-                <li><a class="underline underline-offset-8 ml-2" href="/about">About</a></li>
-                <li><a class="underline underline-offset-8 ml-2" href="/contact">Contact us</a></li>
+                <li>
+                    <NuxtLink class="underline underline-offset-8 ml-2" to="/about">About</NuxtLink>
+                </li>
+                <li>
+                    <NuxtLink class="underline underline-offset-8 ml-2" to="/contact">Contact us</NuxtLink>
+                </li>
+                <li>
+                    <NuxtLink class="underline underline-offset-8 ml-2" to="/secret">secret</NuxtLink>
+                </li>
             </ul>
         </div>
         <div class="navbar-end">
