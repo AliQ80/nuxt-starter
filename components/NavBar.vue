@@ -3,7 +3,6 @@ import { useFirebaseUserStore } from '~~/stores/userStore'
 
 const firebaseUser = useFirebaseUserStore()
 const credentials = ref()
-const userEmail = ref()
 
 const signIn = async () => {
     const email = 'ali@google.com'
@@ -15,11 +14,7 @@ const signIn = async () => {
 const signOut = async () => {
     credentials.value = await signOutUser()
     firebaseUser.user = credentials.value
-
-    console.log(firebaseUser.user);
-    console.log('credentials email', credentials.value);
 }
-
 
 definePageMeta({
     middleware: ["auth"]
@@ -54,11 +49,9 @@ definePageMeta({
         </div>
         <div class="navbar-end">
             <client-only>
-                <div v-if="firebaseUser.user">
+                <div v-if="firebaseUser.email">
                     {{ firebaseUser.email }}
                 </div>
-
-
 
                 <div v-if="!firebaseUser.user">
                     <a class="btn btn-secondary btn-sm w-24 h-10 mx-2">signup</a>
