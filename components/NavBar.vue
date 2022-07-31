@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFirebaseUserStore } from '~~/stores/userState'
+import { useFirebaseUserStore } from '~~/stores/userStore'
 
 const firebaseUser = useFirebaseUserStore()
 const credentials = ref()
@@ -9,17 +9,12 @@ const signIn = async () => {
     const password = '123456'
     credentials.value = await signInUser(email, password)
     firebaseUser.user = credentials.value
-
-    console.log(firebaseUser.user);
 }
 
 const signOut = async () => {
     credentials.value = await signOutUser()
     firebaseUser.user = credentials.value
-
-    console.log(firebaseUser.user);
 }
-
 </script>
 
 <template>
@@ -35,37 +30,52 @@ const signOut = async () => {
                 </label>
                 <ul tabindex="0"
                     class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact us</a></li>
+                    <li>
+                        <NuxtLink to="/about">About</NuxtLink>
+                    </li>
+                    <li>
+                        <NuxtLink to="/contact">Contact us</NuxtLink>
+                    </li>
                 </ul>
             </div>
-            <a href="/" class="btn btn-ghost normal-case text-xl">daisyUI</a>
+            <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">daisyUI</NuxtLink>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal p-0">
-                <li><a class="underline underline-offset-8 ml-2" href="/about">About</a></li>
-                <li><a class="underline underline-offset-8 ml-2" href="/contact">Contact us</a></li>
+                <li>
+                    <NuxtLink class="underline underline-offset-8 ml-2" to="/about">About</NuxtLink>
+                </li>
+                <li>
+                    <NuxtLink class="underline underline-offset-8 ml-2" to="/contact">Contact us</NuxtLink>
+                </li>
+                <li>
+                    <NuxtLink class="underline underline-offset-8 ml-2" to="/secret">secret</NuxtLink>
+                </li>
             </ul>
         </div>
         <div class="navbar-end">
-            <div v-if="!firebaseUser.user">
-                <a class="btn btn-secondary btn-sm w-24 h-10 mx-2">signup</a>
-                <a class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</a>
-            </div>
-            <div v-else>
-                <a class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</a>
-            </div>
+            <client-only>
+                <div v-if="firebaseUser.email">
+                    {{ firebaseUser.email }}
+                </div>
 
+                <div v-if="!firebaseUser.user">
+                    <a class="btn btn-secondary btn-sm w-24 h-10 mx-2">signup</a>
+                    <a class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</a>
+                </div>
+                <div v-else>
+                    <a class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</a>
+                </div>
+            </client-only>
         </div>
     </div>
-
-    <div v-if="firebaseUser.user">
+    <!-- <div v-if="firebaseUser.user">
         <pre>
                 {{ firebaseUser.user }}
         </pre>
     </div>
     <div v-else>
         user is logged out
-    </div>
+    </div> -->
 
 </template>

@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 
-import { useFirebaseUserStore } from '~~/stores/userState'
+import { useFirebaseUserStore } from '~~/stores/userStore'
 
 export const creatUser = async (email: string, password: string) => {
   const auth = getAuth()
@@ -50,10 +50,12 @@ export const initUser = async () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid
-      console.log('Auth changed', user)
+      firebaseUser.email = user.email
+      // console.log('Auth changed', user)
     } else {
       // User is signed out
-      console.log('Auth changed', user)
+      // console.log('Auth changed', user)
+      firebaseUser.email = ''
     }
     firebaseUser.user = user
   })
