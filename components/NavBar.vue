@@ -61,10 +61,10 @@ const signOut = async () => {
 
                 <div v-if="!firebaseUser.user">
                     <NuxtLink to="/register" class="btn btn-secondary btn-sm w-24 h-10 mx-2">Register</NuxtLink>
-                    <a class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</a>
+                    <NuxtLink class="btn btn-primary btn-sm w-24 h-10 mx-2" @click="signIn">Login</NuxtLink>
                 </div>
                 <div v-else>
-                    <a class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</a>
+                    <NuxtLink class="btn btn-info btn-sm w-24 h-10 mx-2" @click="signOut">Logout</NuxtLink>
                 </div>
             </client-only>
         </div>
