@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
+const route = useRoute()
+console.log('current name', route.name)
+
 const firebaseUser = useFirebaseUserStore()
 const credentials = ref()
 
@@ -60,7 +63,8 @@ const signOut = async () => {
                 </div>
 
                 <div v-if="!firebaseUser.user">
-                    <NuxtLink to="/register" class="btn btn-secondary btn-xs  h-10 mx-2">Register</NuxtLink>
+                    <NuxtLink to="/register" v-if="route.name !== 'register'"
+                        class="btn btn-secondary btn-xs  h-10 mx-2">Register</NuxtLink>
                     <NuxtLink class="btn btn-primary btn-xs h-10 mx-2" @click="signIn">Login</NuxtLink>
                 </div>
                 <div v-else>
