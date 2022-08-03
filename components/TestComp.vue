@@ -5,6 +5,11 @@ const counterStore = useStore()
 const plus = () => {
     counterStore.hit()
 }
+
+const items = ref(["😏", "😐", "😑", "😒", "😕"])
+function removeItem(toRemove) {
+    items.value = items.value.filter((item) => item !== toRemove)
+}
 </script>
 
 <template>
@@ -42,7 +47,36 @@ const plus = () => {
         <button @click="counterStore.hit()" class="btn">++</button>
     </div>
 
+    <div class="grid grid-cols-1 w-96 mx-auto justify-items-center py-10">
+        <h1 class="text-lg">Auto Animate</h1>
+        <h5>Click emojis to remove them.</h5>
+        <ul v-auto-animate>
+            <li
+                v-for="item in items"
+                :key="item"
+                @click="removeItem(item)">
+                {{ item }}
+            </li>
+        </ul>
+    </div>
 </template>
 
 <style scoped>
 </style>
+
+<script setup>
+
+
+</script>
+
+<template>
+    <h5>Click emojis to remove them.</h5>
+    <ul v-auto-animate>
+        <li
+            v-for="item in items"
+            :key="item"
+            @click="removeItem(item)">
+            {{ item }}
+        </li>
+    </ul>
+</template>

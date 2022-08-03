@@ -663,6 +663,20 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.6.2.tgz#6d05fa126104c9907573364dc04147b89b530e15"
   integrity sha512-zThUKcqIU6utWzM93uEvhlh8qj8A5LMPFJPvk/ODb+8GSSif19xM2Lw1M2ijyBy8+6skSkQBbavPzOU5Oh/8tQ==
 
+"@formkit/addons@^1.0.0-beta.10":
+  version "1.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/@formkit/addons/-/addons-1.0.0-beta.10.tgz#172acc066de18bad13845dc86d564609257557a0"
+  integrity sha512-gQ60lG49CsIP1Rvu4pWG2DOy8qpdiFvZmvFWH1mh31wh0CGu3xrgjk7J4NcoI1Zh9HzJEqUYq1hYWW4t36glQg==
+  dependencies:
+    "@formkit/auto-animate" latest
+    "@formkit/core" "1.0.0-beta.10"
+    "@formkit/utils" "1.0.0-beta.10"
+
+"@formkit/auto-animate@latest":
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@formkit/auto-animate/-/auto-animate-1.0.0-beta.1.tgz#aec5fd2ea5e499ceb7eb117c7fd1217a7f100748"
+  integrity sha512-I3OWOBaPZKSJL4bsooXI8kC3q7bcgibD2oML0P/Lir6MnbvUe/0/7EH8br024juvM/Ulm9C9xGx9CJUQYrOWSA==
+
 "@formkit/core@1.0.0-beta.10":
   version "1.0.0-beta.10"
   resolved "https://registry.yarnpkg.com/@formkit/core/-/core-1.0.0-beta.10.tgz#eb8315a80d9e74cb612b1faebf765a8f8f344bf9"
