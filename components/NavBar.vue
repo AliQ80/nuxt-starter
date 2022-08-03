@@ -2,7 +2,6 @@
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
 const route = useRoute()
-console.log('current name', route.name)
 
 const firebaseUser = useFirebaseUserStore()
 const credentials = ref()
