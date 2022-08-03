@@ -1,6 +1,10 @@
 <script setup lang='ts'>
 import { useStore } from '../stores/counter'
 const counterStore = useStore()
+
+const plus = () => {
+    counterStore.hit()
+}
 </script>
 
 <template>
@@ -35,6 +39,7 @@ const counterStore = useStore()
     <div class="grid grid-cols-1 w-96 mx-auto justify-items-center py-10">
         <h1 class="text-lime-500 text-3xl py-4">pinia store</h1>
         <h1 class="py-4">Home view: {{ counterStore.counter }}</h1>
+        <button @click="counterStore.hit()" class="btn">++</button>
     </div>
 
 </template>
