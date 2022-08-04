@@ -9,7 +9,7 @@ import {
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
-export const creatUser = async (email: string, password: string) => {
+export const createUser = async (email: string, password: string) => {
   const auth = getAuth()
   const credentials = await createUserWithEmailAndPassword(
     auth,
