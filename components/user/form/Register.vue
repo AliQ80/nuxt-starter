@@ -2,12 +2,13 @@
 import { useFirebaseUserStore } from '~~/stores/userStore';
 import { signOutUser, createUser } from "~~/composables/useFirebase";
 import autoAnimate from '@formkit/auto-animate'
+// import { async } from '@firebase/util';
 
-const props = defineProps({
-    form: Object,
-    title: String,
-    message: String
-});
+// const props = defineProps({
+//     form: Object,
+//     title: String,
+//     message: String
+// });
 
 
 const submitted = ref(false)
@@ -16,8 +17,14 @@ const submitHandler = async () => {
     await new Promise((r) => setTimeout(r, 1000))
     submitted.value = true
 }
-
+// --- start auto animate form ---
 const ccform = ref()
+onMounted(() => {
+    ccform.value.querySelectorAll(".formkit-outer").forEach(autoAnimate)
+})
+// --- end auto animate form ---
+
+// --- start FormKit styles ---
 const formStyles = ref({
     // outer: 'mb-5',
     // label: 'block mb-1 font-bold text-xl text-gray-500',
@@ -25,10 +32,7 @@ const formStyles = ref({
     input: '$reset block border border-grey-light w-full p-3 rounded text-gray-500',
     // message: 'text-xs text-red-500 font-light'
 })
-onMounted(() => {
-    ccform.value.querySelectorAll(".formkit-outer").forEach(autoAnimate)
-})
-
+// --- end FormKit styles ---
 
 const registerForm = ref({ email: "", password: "" });
 const signinForm = ref({ email: "", password: "" });
@@ -41,10 +45,15 @@ const registerMessage = ref();
 //     signinForm.value = { email: "", password: "" };
 // };
 
-const register = async () => {
-    console.log(registerForm.value);
-    const credentials = await createUser(registerForm.value.email, registerForm.value.password);
-    registerForm.value = { email: "", password: "" };
+const register = async (value) => {
+    console.log('value name: ', value.name);
+    console.log('value email: ', value.email);
+    console.log('value password: ', value.password);
+
+    // --- from the repo code ---
+    const credentials = await createUser(value.email, value.password);
+    console.log('credentials: ', credentials);
+    // registerForm.value = { value.name, value.password };
     if (credentials) {
         registerMessage.value = `Successfully registered: ${credentials.user.email}`
         setTimeout(() => {
@@ -62,8 +71,12 @@ const register = async () => {
             id="registration"
             form-class="lg:w-96"
             :form-class="submitted ? 'hide' : 'show'"
-            :form="registerForm"
-            :message="registerMessage"
+            :value="{
+                name: 'Ali Karam',
+                email: 'ak@alikaram.com',
+                password: 'arst1234',
+                password_confirm: 'arst1234'
+            }"
             submit-label="Register"
             @submit="register"
             :actions="false"
@@ -107,8 +120,10 @@ const register = async () => {
             <FormKit
                 type="submit"
                 label="Register"
+                @submit.prevent="register"
                 input-class="$reset btn btn-success btn-block mt-4" />
-            <pre wrap>{{ value }}</pre>
+            <!-- <pre wrap>{{ value }}</pre> -->
+
         </FormKit>
         <div v-if="submitted">
             <h2>Submission successful!</h2>
