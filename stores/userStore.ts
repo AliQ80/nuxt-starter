@@ -11,11 +11,9 @@ export const useFirebaseUserStore = defineStore('userStore', {
   },
   actions: {},
 
-  getters: {
-    //   getUserEmail: (state) => {
-    //     return (userEmail: string) => state.user.email
-    //   },
-  },
+  getters: {},
+
+  persist: true,
 })
 
 if (import.meta.hot) {

@@ -22,6 +22,7 @@ export const useStore = defineStore('storeId', {
       state.name
     },
   },
+  persist: true,
 })
 
 if (import.meta.hot) {
