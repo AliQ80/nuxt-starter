@@ -24,7 +24,7 @@ const error = ref(false)
 const errorCode = ref('')
 
 const register = async (value) => {
-    const credentials = await createUser(value.email, value.password);
+    const credentials = await createUser(value.email, value.password, value.name);
 
     if (credentials && errorCode.value === '') {
         submitted.value = true

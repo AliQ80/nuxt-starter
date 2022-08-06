@@ -2,20 +2,31 @@
 
 import {
   getAuth,
+  setPersistence,
+  browserLocalPersistence,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth'
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
-export const createUser = async (email: string, password: string) => {
+export const createUser = async (
+  email: string,
+  password: string,
+  name: string
+) => {
   const auth = getAuth()
+  // await setPersistence(auth, browserLocalPersistence)
   const firebaseUser = useFirebaseUserStore()
   let user = {}
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
+      updateProfile(userCredential.user, {
+        displayName: name,
+      })
       user = userCredential.user
     })
     .catch((error) => {
@@ -23,12 +34,12 @@ export const createUser = async (email: string, password: string) => {
       firebaseUser.error = errorCode
       const errorMessage = error.message
     })
-  // return credentials
   return user
 }
 
 export const signInUser = async (email: string, password: string) => {
   const auth = getAuth()
+  // await setPersistence(auth, browserLocalPersistence)
   const credentials = await signInWithEmailAndPassword(
     auth,
     email,
@@ -42,6 +53,7 @@ export const signInUser = async (email: string, password: string) => {
 
 export const initUser = async () => {
   const auth = getAuth()
+  // await setPersistence(auth, browserLocalPersistence)
   const firebaseUser = useFirebaseUserStore()
   firebaseUser.user = auth.currentUser
 
@@ -51,6 +63,7 @@ export const initUser = async () => {
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid
       firebaseUser.email = user.email
+      firebaseUser.name = user.displayName
       // console.log('Auth changed', user)
     } else {
       // User is signed out

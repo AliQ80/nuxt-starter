@@ -7,6 +7,7 @@ export const useFirebaseUserStore = defineStore('userStore', {
       // all these properties will have their type inferred automatically
       user: {},
       email: '',
+      name: '',
       error: '',
     }
   },

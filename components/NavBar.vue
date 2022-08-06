@@ -58,6 +58,8 @@ const signOut = async () => {
         <div class="navbar-end">
             <client-only>
                 <div v-if="firebaseUser.email">
+                    {{ firebaseUser.name }}
+                    <br>
                     {{ firebaseUser.email }}
                 </div>
 
