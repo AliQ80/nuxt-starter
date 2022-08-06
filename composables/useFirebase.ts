@@ -13,17 +13,14 @@ export const createUser = async (email: string, password: string) => {
   const auth = getAuth()
   const firebaseUser = useFirebaseUserStore()
   let user = {}
-  const credentials = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  )
+  await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       user = userCredential.user
     })
     .catch((error) => {
       const errorCode = error.code
+      firebaseUser.error = errorCode
       const errorMessage = error.message
     })
   // return credentials

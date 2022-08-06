@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
-const route = useRoute()
-
 const firebaseUser = useFirebaseUserStore()
+
+const route = useRoute()
 const credentials = ref()
 
 const signIn = async () => {
@@ -72,13 +72,4 @@ const signOut = async () => {
             </client-only>
         </div>
     </div>
-    <!-- <div v-if="firebaseUser.user">
-        <pre>
-                {{ firebaseUser.user }}
-        </pre>
-    </div>
-    <div v-else>
-        user is logged out
-    </div> -->
-
 </template>

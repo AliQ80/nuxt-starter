@@ -1,6 +1,7 @@
 <script setup>
 import { createUser } from "~~/composables/useFirebase";
 import autoAnimate from '@formkit/auto-animate'
+import { useFirebaseUserStore } from '~~/stores/userStore'
 
 // --- auto animate form ---
 const ccform = ref()
@@ -17,16 +18,31 @@ const formStyles = ref({
     // message: 'text-xs text-red-500 font-light'
 })
 
+const firebaseUser = useFirebaseUserStore()
 const submitted = ref(false)
+const error = ref(false)
+const errorCode = ref('')
 
 const register = async (value) => {
     const credentials = await createUser(value.email, value.password);
 
-    if (credentials) {
+    if (credentials && errorCode.value === '') {
         submitted.value = true
+        error.value = false
         setTimeout(() => {
             return navigateTo('/')
         }, 5000);
+    }
+
+    if (firebaseUser.error !== '') {
+        if (firebaseUser.error === 'auth/email-already-in-use') {
+            errorCode.value = 'Email already in use'
+        }
+        // errorCode.value = firebaseUser.error
+        console.log('errorCode register.vue: ', errorCode.value);
+        submitted.value = false
+        error.value = true
+
     }
 };
 </script>
@@ -87,6 +103,9 @@ const register = async (value) => {
             <h2 class="text-2xl font-semibold text-emerald-400">Registeration successful!</h2>
             <progress class="progress progress-success w-56 mt-4"></progress>
         </div>
+        <div class="grid grid-cols-1 w-96 mx-auto justify-items-center" v-if="errorCode !== ''">
+            <h2 class="text-2xl font-semibold text-rose-600">Registeration Failed!</h2>
+            <h2 class="font-medium">{{ errorCode }}</h2>
+        </div>
     </div>
-
 </template>
