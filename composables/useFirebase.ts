@@ -9,8 +9,10 @@ import {
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
-export const creatUser = async (email: string, password: string) => {
+export const createUser = async (email: string, password: string) => {
   const auth = getAuth()
+  const firebaseUser = useFirebaseUserStore()
+  let user = {}
   const credentials = await createUserWithEmailAndPassword(
     auth,
     email,
@@ -18,13 +20,14 @@ export const creatUser = async (email: string, password: string) => {
   )
     .then((userCredential) => {
       // Signed in
-      const user = userCredential.user
+      user = userCredential.user
     })
     .catch((error) => {
       const errorCode = error.code
       const errorMessage = error.message
     })
-  return credentials
+  // return credentials
+  return user
 }
 
 export const signInUser = async (email: string, password: string) => {

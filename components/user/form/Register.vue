@@ -1,22 +1,44 @@
 <script setup>
-import { ref } from 'vue'
+import { createUser } from "~~/composables/useFirebase";
+import autoAnimate from '@formkit/auto-animate'
+
+// --- auto animate form ---
+const ccform = ref()
+onMounted(() => {
+    ccform.value.querySelectorAll(".formkit-outer").forEach(autoAnimate)
+})
+
+// --- FormKit styles ---
+const formStyles = ref({
+    // outer: 'mb-5',
+    // label: 'block mb-1 font-bold text-xl text-gray-500',
+    // inner: 'w-full border-b border-gray-900 mb-1 overflow-hidden focus-within:border-ct-blue-500',
+    input: '$reset block border border-grey-light w-full p-3 rounded text-gray-500',
+    // message: 'text-xs text-red-500 font-light'
+})
+
 const submitted = ref(false)
-const submitHandler = async () => {
-    // Let's pretend this is an ajax request:
-    await new Promise((r) => setTimeout(r, 1000))
-    submitted.value = true
-}
+
+const register = async (value) => {
+    const credentials = await createUser(value.email, value.password);
+
+    if (credentials) {
+        submitted.value = true
+        setTimeout(() => {
+            return navigateTo('/')
+        }, 5000);
+    }
+};
 </script>
 
 <template>
-    <div class="grid grid-cols-1 w-96 mx-auto justify-items-center py-10">
+    <div ref="ccform" class="grid grid-cols-1 w-96 mx-auto justify-items-center py-10">
         <FormKit
             type="form"
+            id="registration"
             form-class="lg:w-96"
-            id="registration-example"
-            :form-class="submitted ? 'hide' : 'show'"
             submit-label="Register"
-            @submit="submitHandler"
+            @submit="register"
             :actions="false"
             #default="{ value }">
             <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-300">Register Now For Free!</h1>
@@ -27,14 +49,14 @@ const submitHandler = async () => {
                 name="name"
                 label="Your name"
                 validation="required"
-                input-class="$reset block border border-grey-light w-full p-3 rounded text-gray-500" />
+                :classes="formStyles" />
             <FormKit
-                type="text"
+                type="email"
                 prefix-icon="email"
                 name="email"
                 label="Your email"
                 validation="required|email"
-                input-class="$reset block border border-grey-light w-full p-3 rounded text-gray-500" />
+                :classes="formStyles" />
             <div class="double">
                 <FormKit
                     type="password"
@@ -45,24 +67,25 @@ const submitHandler = async () => {
                     :validation-messages="{
                         matches: 'Please include at least one symbol',
                     }"
-                    input-class="$reset block border border-grey-light w-full p-3 rounded text-gray-500" />
+                    :classes="formStyles" />
                 <FormKit
                     type="password"
                     prefix-icon="hidden"
                     name="password_confirm"
                     label="Confirm password"
                     validation="required|confirm"
-                    input-class="$reset block border border-grey-light w-full p-3 rounded text-gray-500" />
+                    :classes="formStyles" />
             </div>
 
             <FormKit
                 type="submit"
                 label="Register"
+                @submit.prevent="register"
                 input-class="$reset btn btn-success btn-block mt-4" />
-            <pre wrap>{{ value }}</pre>
         </FormKit>
-        <div v-if="submitted">
-            <h2>Submission successful!</h2>
+        <div class="grid grid-cols-1 w-96 mx-auto justify-items-center" v-if="submitted">
+            <h2 class="text-2xl font-semibold text-emerald-400">Registeration successful!</h2>
+            <progress class="progress progress-success w-56 mt-4"></progress>
         </div>
     </div>
 
