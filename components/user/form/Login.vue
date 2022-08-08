@@ -1,5 +1,5 @@
 <script setup>
-import { createUser, signOutUser } from "~~/composables/useFirebase";
+import { signInUser, signOutUser } from "~~/composables/useFirebase";
 import autoAnimate from '@formkit/auto-animate'
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
@@ -21,9 +21,9 @@ const formStyles = ref({
 const firebaseUser = useFirebaseUserStore()
 const errorCode = ref('')
 
-const register = async (value) => {
+const login = async (value) => {
     await signOutUser()
-    await createUser(value.email, value.password, value.name);
+    await signInUser(value.email, value.password);
 
     if (firebaseUser.email) {
         setTimeout(() => {
@@ -44,19 +44,13 @@ const register = async (value) => {
             type="form"
             id="registration"
             form-class="lg:w-96"
-            submit-label="Register"
-            @submit="register"
+            submit-label="Login"
+            @submit="login"
             :actions="false"
             #default="{ value }">
-            <h1 class="mb-6 text-center text-3xl font-extrabold text-gray-300">Register Now For Free!</h1>
-            <hr class="mb-8" />
-            <FormKit
-                type="text"
-                prefix-icon="avatarMan"
-                name="name"
-                label="Your name"
-                validation="required"
-                :classes="formStyles" />
+            <h1 class="mb-6 text-center text-3xl font-extrabold text-gray-300">Login to
+                your account</h1>
+            <hr class="flex mx-auto mb-8" />
             <FormKit
                 type="email"
                 prefix-icon="email"
@@ -75,27 +69,20 @@ const register = async (value) => {
                         matches: 'Please include at least one symbol',
                     }"
                     :classes="formStyles" />
-                <FormKit
-                    type="password"
-                    prefix-icon="hidden"
-                    name="password_confirm"
-                    label="Confirm password"
-                    validation="required|confirm"
-                    :classes="formStyles" />
             </div>
 
             <FormKit
                 type="submit"
-                label="Register"
-                @submit.prevent="register"
-                input-class="$reset btn btn-success btn-block mt-4" />
+                label="Login"
+                @submit.prevent="login"
+                input-class="$reset btn btn-info btn-block mt-4" />
         </FormKit>
         <div class="grid grid-cols-1 w-96 mx-auto justify-items-center" v-if="firebaseUser.email">
-            <h2 class="text-2xl font-semibold text-emerald-400">Registeration successful!</h2>
+            <h2 class="text-2xl font-semibold text-emerald-400">Login successful!</h2>
             <progress class="progress progress-success w-56 mt-4"></progress>
         </div>
         <div class="grid grid-cols-1 w-96 mx-auto justify-items-center" v-if="firebaseUser.error">
-            <h2 class="text-2xl font-semibold text-rose-600">Registeration Failed!</h2>
+            <h2 class="text-2xl font-semibold text-rose-600">Login Failed!</h2>
             <h2 class="font-medium">{{ errorCode }}</h2>
         </div>
     </div>
