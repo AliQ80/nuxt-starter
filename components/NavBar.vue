@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
-const route = useRoute()
-
 const firebaseUser = useFirebaseUserStore()
+
+const route = useRoute()
 const credentials = ref()
 
 const signIn = async () => {
     const email = 'ali@google.com'
     const password = '123456'
     credentials.value = await signInUser(email, password)
-    firebaseUser.user = credentials.value
+    firebaseUser.email = credentials.value.user.email
+    firebaseUser.name = credentials.value.user.name
+    console.log(credentials.value);
 }
 
 const signOut = async () => {
-    credentials.value = await signOutUser()
-    firebaseUser.user = credentials.value
+    await signOutUser()
 }
 </script>
 
@@ -38,10 +39,14 @@ const signOut = async () => {
                     <li>
                         <NuxtLink to="/contact">Contact us</NuxtLink>
                     </li>
+                    <li>
+                        <NuxtLink to="/secret">secret</NuxtLink>
+                    </li>
                 </ul>
             </div>
             <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">daisyUI</NuxtLink>
         </div>
+
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal p-0">
                 <li>
@@ -55,30 +60,27 @@ const signOut = async () => {
                 </li>
             </ul>
         </div>
+
         <div class="navbar-end">
             <client-only>
+
                 <div v-if="firebaseUser.email">
+                    {{ firebaseUser.name }}
+                    <br>
                     {{ firebaseUser.email }}
                 </div>
 
-                <div v-if="!firebaseUser.user">
+                <div v-if="!firebaseUser.email">
                     <NuxtLink to="/register" v-if="route.name !== 'register'"
                         class="btn btn-success btn-xs h-10 w-24 mx-2 mt-2">Register</NuxtLink>
-                    <NuxtLink class="btn btn-info btn-xs w-24 h-10 mx-2 mt-2" @click="signIn">Login</NuxtLink>
+                    <NuxtLink to="/login" v-if="route.name !== 'login'"
+                        class=" btn btn-info btn-xs h-10 w-24 mx-2 mt-2">Login</NuxtLink>
                 </div>
                 <div v-else>
                     <NuxtLink class="btn btn-secondary btn-sm h-10 w-24 mx-2 mt-2" @click="signOut">Logout</NuxtLink>
                 </div>
+
             </client-only>
         </div>
     </div>
-    <!-- <div v-if="firebaseUser.user">
-        <pre>
-                {{ firebaseUser.user }}
-        </pre>
-    </div>
-    <div v-else>
-        user is logged out
-    </div> -->
-
 </template>
