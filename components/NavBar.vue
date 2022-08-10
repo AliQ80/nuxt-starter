@@ -4,18 +4,13 @@ import { useFirebaseUserStore } from '~~/stores/userStore'
 const firebaseUser = useFirebaseUserStore()
 
 const route = useRoute()
-const credentials = ref()
 
-const signIn = async () => {
-    const email = 'ali@google.com'
-    const password = '123456'
-    credentials.value = await signInUser(email, password)
-    firebaseUser.email = credentials.value.user.email
-    firebaseUser.name = credentials.value.user.name
-    console.log(credentials.value);
-}
+const isModalRegOpen = ref(false)
+const isModalLogOpen = ref(false)
 
 const signOut = async () => {
+    isModalRegOpen.value = false
+    isModalLogOpen.value = false
     await signOutUser()
 }
 </script>
@@ -62,25 +57,48 @@ const signOut = async () => {
         </div>
 
         <div class="navbar-end">
-            <client-only>
 
-                <div v-if="firebaseUser.email">
-                    {{ firebaseUser.name }}
-                    <br>
-                    {{ firebaseUser.email }}
-                </div>
+            <!-- display username and email if logged in -->
+            <div v-if="firebaseUser.email">
+                {{ firebaseUser.name }}
+                <br>
+                {{ firebaseUser.email }}
+            </div>
 
-                <div v-if="!firebaseUser.email">
-                    <NuxtLink to="/register" v-if="route.name !== 'register'"
-                        class="btn btn-success btn-xs h-10 w-24 mx-2 mt-2">Register</NuxtLink>
-                    <NuxtLink to="/login" v-if="route.name !== 'login'"
-                        class=" btn btn-info btn-xs h-10 w-24 mx-2 mt-2">Login</NuxtLink>
-                </div>
-                <div v-else>
-                    <NuxtLink class="btn btn-secondary btn-sm h-10 w-24 mx-2 mt-2" @click="signOut">Logout</NuxtLink>
-                </div>
+            <!-- The button to open modal -->
+            <div v-if="!firebaseUser.email">
+                <NuxtLink to="#modal-register" v-if="route.name !== 'register'"
+                    class="btn btn-success btn-xs h-10 w-24 mx-2 mt-2"
+                    @click="isModalRegOpen = !isModalRegOpen">Register</NuxtLink>
+                <NuxtLink to="#modal-Login" v-if="route.name !== 'login'"
+                    class=" btn btn-info btn-xs h-10 w-24 mx-2 mt-2"
+                    @click="isModalLogOpen = !isModalLogOpen">Login</NuxtLink>
+            </div>
+            <div v-else>
+                <NuxtLink class="btn btn-secondary btn-sm h-10 w-24 mx-2 mt-2" @click="signOut">Logout
+                </NuxtLink>
+            </div>
 
-            </client-only>
+            <!-- Register Modal -->
+            <div class="modal" :class="{ 'modal-open': isModalRegOpen }" id="modal-register"
+                v-if="!firebaseUser.email">
+                <div class="modal-box relative">
+                    <NuxtLink to="#" for="modal-register" class="btn btn-sm btn-circle absolute right-2 top-2"
+                        @click="isModalRegOpen = !isModalRegOpen">✕</NuxtLink>
+                    <UserFormRegister />
+                </div>
+            </div>
+
+            <!-- Login Modal -->
+            <div class="modal" :class="{ 'modal-open': isModalLogOpen }" id="modal-login"
+                v-if="!firebaseUser.email">
+                <div class="modal-box relative">
+                    <NuxtLink to="#" for="modal-login" class="btn btn-sm btn-circle absolute right-2 top-2"
+                        @click="isModalLogOpen = !isModalLogOpen">✕</NuxtLink>
+                    <UserFormLogin />
+                </div>
+            </div>
+
         </div>
     </div>
 </template>

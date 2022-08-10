@@ -42,12 +42,11 @@ const login = async (value) => {
     <div ref="ccform" class="grid grid-cols-1 w-96 mx-auto justify-items-center py-10">
         <FormKit
             type="form"
-            id="registration"
+            id="login"
             form-class="lg:w-96"
             submit-label="Login"
             @submit="login"
-            :actions="false"
-            #default="{ value }">
+            :actions="false">
             <h1 class="mb-6 text-center text-3xl font-extrabold text-gray-300">Login to
                 your account</h1>
             <hr class="flex mx-auto mb-8" />

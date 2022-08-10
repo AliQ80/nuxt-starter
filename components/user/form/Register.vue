@@ -46,8 +46,7 @@ const register = async (value) => {
             form-class="lg:w-96"
             submit-label="Register"
             @submit="register"
-            :actions="false"
-            #default="{ value }">
+            :actions="false">
             <h1 class="mb-6 text-center text-3xl font-extrabold text-gray-300">Register Now For Free!</h1>
             <hr class="mb-8" />
             <FormKit
