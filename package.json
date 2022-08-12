@@ -4,20 +4,35 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "lint": "eslint --ext .js,.json,.md,.vue,.ts ."
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.18.9",
     "@formkit/addons": "^1.0.0-beta.10",
     "@formkit/themes": "^1.0.0-beta.10",
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
     "@nuxtjs/tailwindcss": "^5.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "@vueuse/core": "^9.0.2",
     "@vueuse/nuxt": "^9.0.2",
     "autoprefixer": "^10.4.7",
     "core-js": "^3.24.0",
     "daisyui": "^2.20.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-markdown": "^3.0.0",
+    "eslint-plugin-nuxt": "^3.2.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.3.0",
     "nuxt": "3.0.0-rc.6",
     "postcss": "^8.4.14",
-    "tailwindcss": "^3.1.6"
+    "prettier": "2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
+    "tailwindcss": "^3.1.6",
+    "typescript": "^4.7.4",
+    "vue-eslint-parser": "^9.0.3"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.0.0-beta.9",

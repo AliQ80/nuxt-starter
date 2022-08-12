@@ -3,15 +3,15 @@ import { defineNuxtConfig } from 'nuxt'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   typescript: {
-    shim: false,
+    shim: false
   },
   runtimeConfig: {
     // The private keys which are only available within server-side
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
     // Keys within public, will be also exposed to the client-side
     public: {
-      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    },
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY
+    }
   },
   build: {
     postcss: {
@@ -22,15 +22,15 @@ export default defineNuxtConfig({
             configPath: 'tailwind.config.js',
             exposeConfig: false,
             config: {
-              content: ['content/**/**.md'],
+              content: ['content/**/**.md']
             },
             injectPosition: 0,
-            viewer: true,
+            viewer: true
           },
-          autoprefixer: {},
-        },
-      },
-    },
+          autoprefixer: {}
+        }
+      }
+    }
   },
   buildModules: [
     [
@@ -40,15 +40,15 @@ export default defineNuxtConfig({
           // automatically imports `usePinia()`
           'defineStore',
           // automatically imports `usePinia()` as `usePiniaStore()`
-          ['defineStore', 'definePiniaStore'],
-        ],
-      },
-    ],
+          ['defineStore', 'definePiniaStore']
+        ]
+      }
+    ]
   ],
   modules: ['@vueuse/nuxt', '@nuxtjs/tailwindcss', '@formkit/nuxt'],
   app: {
     head: {
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    },
-  },
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    }
+  }
 })
