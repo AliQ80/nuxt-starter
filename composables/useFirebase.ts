@@ -1,13 +1,15 @@
 // https://firebase.google.com/docs/auth/web/start
 
+// add imports to activate firebase persistance
+// setPersistence,
+// browserLocalPersistence,
+
 import {
   getAuth,
-  setPersistence,
-  browserLocalPersistence,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  updateProfile,
+  updateProfile
 } from 'firebase/auth'
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
@@ -25,7 +27,7 @@ export const createUser = async (
     .then((userCredential) => {
       // Signed in
       updateProfile(userCredential.user, {
-        displayName: name,
+        displayName: name
       })
       firebaseUser.email = email
       firebaseUser.name = name
@@ -61,7 +63,7 @@ export const signInUser = async (email: string, password: string) => {
   return user
 }
 
-export const initUser = async () => {
+export const initUser = () => {
   const auth = getAuth()
   // await setPersistence(auth, browserLocalPersistence)
   const firebaseUser = useFirebaseUserStore()

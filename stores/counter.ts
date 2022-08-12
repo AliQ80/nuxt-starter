@@ -7,22 +7,22 @@ export const useStore = defineStore('storeId', {
       // all these properties will have their type inferred automatically
       counter: 12,
       name: 'Eduardo',
-      isAdmin: true,
+      isAdmin: true
     }
   },
   actions: {
-    hit() {
+    hit () {
       this.counter++
-    },
+    }
   },
 
   getters: {
-    getCount: (state) => state.counter,
+    getCount: state => state.counter,
     getUser: (state) => {
-      state.name
-    },
+      return state.name
+    }
   },
-  persist: true,
+  persist: true
 })
 
 if (import.meta.hot) {

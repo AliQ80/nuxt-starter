@@ -8,14 +8,14 @@ export const useFirebaseUserStore = defineStore('userStore', {
       // user: {},
       email: '',
       name: '',
-      error: '',
+      error: ''
     }
   },
   actions: {},
 
   getters: {},
 
-  persist: true,
+  persist: true
 })
 
 if (import.meta.hot) {
