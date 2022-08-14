@@ -1,11 +1,17 @@
 {
   "private": true,
+  "name": "nuxt_starter",
+  "url": "https://github.com/AliQ80/nuxt-starter",
+  "author": "Ali Karam <ak@alikaram.com> (https://alikaram.com/)",
+  "description": "Nuxt 3 starter template with tailwindcss and firebase",
+  "version": "0.4.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "lint": "eslint --ext .js,.json,.md,.vue,.ts ."
+    "lint": "eslint --ext .js,.json,.md,.vue,.ts .",
+    "lintfix": "eslint --fix --ext .js,.json,.md,.vue,.ts ."
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
