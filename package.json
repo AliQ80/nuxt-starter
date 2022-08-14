@@ -1,10 +1,23 @@
 {
   "private": true,
   "name": "nuxt_starter",
-  "url": "https://github.com/AliQ80/nuxt-starter",
-  "author": "Ali Karam <ak@alikaram.com> (https://alikaram.com/)",
   "description": "Nuxt 3 starter template with tailwindcss and firebase",
   "version": "0.4.0",
+  "author": "Ali Karam <ak@alikaram.com> (https://alikaram.com/)",
+  "url": "https://nuxt-starter-eta.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AliQ80/nuxt-starter.git"
+  },
+  "keywords": [
+    "vue 3",
+    "Nuxt 3",
+    "Firebase 9",
+    "Tailwind 3",
+    "Pinia 2",
+    "Daisy UI",
+    "FormKit"
+  ],
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
