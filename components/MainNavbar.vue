@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { useFirebaseUserStore } from '~~/stores/userStore'
+  import { useFirebaseUserStore } from '~~/stores/userStore'
 
-const firebaseUser = useFirebaseUserStore()
+  const firebaseUser = useFirebaseUserStore()
 
-const route = useRoute()
+  const route = useRoute()
 
-const isModalRegOpen = ref(false)
-const isModalLogOpen = ref(false)
+  const isModalRegOpen = ref(false)
+  const isModalLogOpen = ref(false)
 
-const signOut = async () => {
-  isModalRegOpen.value = false
-  isModalLogOpen.value = false
-  await signOutUser()
-}
+  const signOut = async () => {
+    isModalRegOpen.value = false
+    isModalLogOpen.value = false
+    await signOutUser()
+  }
 </script>
 
 <template>
@@ -35,25 +35,19 @@ const signOut = async () => {
         </label>
         <ul
           tabindex="0"
-          class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+          class="menu menu-compact dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow">
           <li>
-            <NuxtLink to="/about">
-              About
-            </NuxtLink>
+            <NuxtLink to="/about"> About </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/contact">
-              Contact us
-            </NuxtLink>
+            <NuxtLink to="/contact"> Contact us </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/secret">
-              secret
-            </NuxtLink>
+            <NuxtLink to="/secret"> secret </NuxtLink>
           </li>
         </ul>
       </div>
-      <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">
+      <NuxtLink to="/" class="btn btn-ghost text-xl normal-case">
         daisyUI
       </NuxtLink>
     </div>
@@ -61,17 +55,17 @@ const signOut = async () => {
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal p-0">
         <li>
-          <NuxtLink class="underline underline-offset-8 ml-2" to="/about">
+          <NuxtLink class="ml-2 underline underline-offset-8" to="/about">
             About
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink class="underline underline-offset-8 ml-2" to="/contact">
+          <NuxtLink class="ml-2 underline underline-offset-8" to="/contact">
             Contact us
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink class="underline underline-offset-8 ml-2" to="/secret">
+          <NuxtLink class="ml-2 underline underline-offset-8" to="/secret">
             secret
           </NuxtLink>
         </li>
@@ -82,7 +76,7 @@ const signOut = async () => {
       <!-- display username and email if logged in -->
       <div v-if="firebaseUser.email">
         {{ firebaseUser.name }}
-        <br>
+        <br />
         {{ firebaseUser.email }}
       </div>
 
@@ -91,20 +85,22 @@ const signOut = async () => {
         <NuxtLink
           v-if="route.name !== 'register'"
           to="#modal-register"
-          class="btn btn-success btn-xs h-10 w-24 mx-2 mt-2"
+          class="btn btn-success btn-xs mx-2 mt-2 h-10 w-24"
           @click="isModalRegOpen = !isModalRegOpen">
           Register
         </NuxtLink>
         <NuxtLink
           v-if="route.name !== 'login'"
           to="#modal-Login"
-          class=" btn btn-info btn-xs h-10 w-24 mx-2 mt-2"
+          class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
           @click="isModalLogOpen = !isModalLogOpen">
           Login
         </NuxtLink>
       </div>
       <div v-else>
-        <NuxtLink class="btn btn-secondary btn-sm h-10 w-24 mx-2 mt-2" @click="signOut">
+        <NuxtLink
+          class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
+          @click="signOut">
           Logout
         </NuxtLink>
       </div>

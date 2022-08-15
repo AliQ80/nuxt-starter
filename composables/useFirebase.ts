@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  updateProfile
+  updateProfile,
 } from 'firebase/auth'
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
@@ -27,7 +27,7 @@ export const createUser = async (
     .then((userCredential) => {
       // Signed in
       updateProfile(userCredential.user, {
-        displayName: name
+        displayName: name,
       })
       firebaseUser.email = email
       firebaseUser.name = name

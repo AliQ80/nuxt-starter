@@ -1,49 +1,49 @@
 <script setup>
-import autoAnimate from '@formkit/auto-animate'
-import { signInUser, signOutUser } from '~~/composables/useFirebase'
-import { useFirebaseUserStore } from '~~/stores/userStore'
+  import autoAnimate from '@formkit/auto-animate'
+  import { signInUser, signOutUser } from '~~/composables/useFirebase'
+  import { useFirebaseUserStore } from '~~/stores/userStore'
 
-// --- auto animate form ---
-const ccform = ref()
-onMounted(() => {
-  ccform.value.querySelectorAll('.formkit-outer').forEach(autoAnimate)
-})
+  // --- auto animate form ---
+  const ccform = ref()
+  onMounted(() => {
+    ccform.value.querySelectorAll('.formkit-outer').forEach(autoAnimate)
+  })
 
-// --- FormKit styles ---
-const formStyles = ref({
-  // outer: 'mb-5',
-  // label: 'block mb-1 font-bold text-xl text-gray-500',
-  // inner: 'w-full border-b border-gray-900 mb-1 overflow-hidden focus-within:border-ct-blue-500',
-  input:
-    '$reset block border border-grey-light w-full p-3 rounded text-gray-500'
-  // message: 'text-xs text-red-500 font-light'
-})
+  // --- FormKit styles ---
+  const formStyles = ref({
+    // outer: 'mb-5',
+    // label: 'block mb-1 font-bold text-xl text-gray-500',
+    // inner: 'w-full border-b border-gray-900 mb-1 overflow-hidden focus-within:border-ct-blue-500',
+    input:
+      '$reset block border border-grey-light w-full p-3 rounded text-gray-500',
+    // message: 'text-xs text-red-500 font-light'
+  })
 
-const firebaseUser = useFirebaseUserStore()
-const errorCode = ref('')
+  const firebaseUser = useFirebaseUserStore()
+  const errorCode = ref('')
 
-const login = async (value) => {
-  await signOutUser()
-  await signInUser(value.email, value.password)
+  const login = async (value) => {
+    await signOutUser()
+    await signInUser(value.email, value.password)
 
-  if (firebaseUser.email) {
-    setTimeout(() => {
-      return navigateTo('/')
-    }, 5000)
+    if (firebaseUser.email) {
+      setTimeout(() => {
+        return navigateTo('/')
+      }, 5000)
+    }
+
+    if (firebaseUser.error !== '') {
+      errorCode.value =
+        firebaseUser.error.charAt(5).toUpperCase() +
+        firebaseUser.error.slice(6).replaceAll('-', ' ')
+    }
   }
-
-  if (firebaseUser.error !== '') {
-    errorCode.value =
-      firebaseUser.error.charAt(5).toUpperCase() +
-      firebaseUser.error.slice(6).replaceAll('-', ' ')
-  }
-}
 </script>
 
 <template>
   <div
     ref="ccform"
-    class="grid grid-cols-1 w-96 mx-auto justify-items-center py-10">
+    class="mx-auto grid w-96 grid-cols-1 justify-items-center py-10">
     <FormKit
       id="login"
       type="form"
@@ -54,7 +54,7 @@ const login = async (value) => {
       <h1 class="mb-6 text-center text-3xl font-extrabold text-gray-300">
         Login to your account
       </h1>
-      <hr class="flex mx-auto mb-8">
+      <hr class="mx-auto mb-8 flex" />
       <FormKit
         type="email"
         prefix-icon="email"
@@ -83,18 +83,14 @@ const login = async (value) => {
     </FormKit>
     <div
       v-if="firebaseUser.email"
-      class="grid grid-cols-1 w-96 mx-auto justify-items-center">
-      <h2 class="text-2xl font-semibold text-emerald-400">
-        Login successful!
-      </h2>
-      <progress class="progress progress-success w-56 mt-4" />
+      class="mx-auto grid w-96 grid-cols-1 justify-items-center">
+      <h2 class="text-2xl font-semibold text-emerald-400">Login successful!</h2>
+      <progress class="progress progress-success mt-4 w-56" />
     </div>
     <div
       v-if="firebaseUser.error"
-      class="grid grid-cols-1 w-96 mx-auto justify-items-center">
-      <h2 class="text-2xl font-semibold text-rose-600">
-        Login Failed!
-      </h2>
+      class="mx-auto grid w-96 grid-cols-1 justify-items-center">
+      <h2 class="text-2xl font-semibold text-rose-600">Login Failed!</h2>
       <h2 class="font-medium">
         {{ errorCode }}
       </h2>
