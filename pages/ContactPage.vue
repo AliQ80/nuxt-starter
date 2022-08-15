@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  title: 'Nuxt-starter | Contact',
-  alias: ['/contact']
-})
+  definePageMeta({
+    title: 'Nuxt-starter | Contact',
+    alias: ['/contact'],
+  })
 </script>
 
 <template>

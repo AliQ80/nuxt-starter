@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  title: 'Nuxt-starter | Register',
-  alias: ['/register']
-})
+  definePageMeta({
+    title: 'Nuxt-starter | Register',
+    alias: ['/register'],
+  })
 </script>
 
 <template>

@@ -23,8 +23,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "lint": "eslint --ext .js,.json,.md,.vue,.ts .",
-    "lintfix": "eslint --fix --ext .js,.json,.md,.vue,.ts ."
+    "lint": "eslint --ext \".js,.json,.md,.vue,.ts\" --ignore-path .gitignore .",
+    "lintfix": "eslint --fix --ext \".js,.json,.md,.vue,.ts\" --ignore-path .gitignore ."
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
@@ -40,6 +40,7 @@
     "core-js": "^3.24.0",
     "daisyui": "^2.20.0",
     "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-markdown": "^3.0.0",
     "eslint-plugin-nuxt": "^3.2.0",

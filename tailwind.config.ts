@@ -7,10 +7,10 @@ module.exports = {
     'composables/**/*.{js,ts}',
     'plugins/**/*.{js,ts}',
     'App.{js,ts,vue}',
-    'app.{js,ts,vue}'
+    'app.{js,ts,vue}',
   ],
   theme: {
-    extend: {}
+    extend: {},
   },
-  plugins: [require('daisyui')]
+  plugins: [require('daisyui')],
 }

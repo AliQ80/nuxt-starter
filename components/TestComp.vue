@@ -1,36 +1,28 @@
 <script setup lang="ts">
-import { useStore } from '../stores/counter'
-const counterStore = useStore()
+  import { useStore } from '../stores/counter'
+  const counterStore = useStore()
 
-const plus = () => {
-  counterStore.hit()
-}
+  const plus = () => {
+    counterStore.hit()
+  }
 
-const items = ref(['😏', '😐', '😑', '😒', '😕'])
-function removeItem (toRemove) {
-  items.value = items.value.filter(item => item !== toRemove)
-}
+  const items = ref(['😏', '😐', '😑', '😒', '😕'])
+  function removeItem(toRemove) {
+    items.value = items.value.filter((item) => item !== toRemove)
+  }
 </script>
 
 <template>
   <div>
     <div class="m-10 flex items-center justify-center">
-      <h1 class="text-3xl font-bold text-green-500">
-        Test Component
-      </h1>
+      <h1 class="text-3xl font-bold text-green-500">Test Component</h1>
     </div>
     <div class="mx-auto grid w-96 grid-cols-1 justify-items-center py-10">
-      <h1 class="py-4 text-3xl text-yellow-500">
-        DaisyUI
-      </h1>
-      <button class="btn btn-primary">
-        Button
-      </button>
+      <h1 class="py-4 text-3xl text-yellow-500">DaisyUI</h1>
+      <button class="btn btn-primary">Button</button>
     </div>
     <div class="mx-auto grid w-96 grid-cols-1 justify-items-center py-10">
-      <h1 class="py-4 text-3xl text-orange-500">
-        FormKit
-      </h1>
+      <h1 class="py-4 text-3xl text-orange-500">FormKit</h1>
 
       <FormKit
         label="Username"
@@ -46,21 +38,13 @@ function removeItem (toRemove) {
     <div />
 
     <div class="mx-auto grid w-96 grid-cols-1 justify-items-center py-10">
-      <h1 class="py-4 text-3xl text-lime-500">
-        pinia store
-      </h1>
-      <h1 class="py-4">
-        Home view: {{ counterStore.counter }}
-      </h1>
-      <button class="btn" @click="plus">
-        ++
-      </button>
+      <h1 class="py-4 text-3xl text-lime-500">pinia store</h1>
+      <h1 class="py-4">Home view: {{ counterStore.counter }}</h1>
+      <button class="btn" @click="plus">++</button>
     </div>
 
     <div class="mx-auto grid w-96 grid-cols-1 justify-items-center py-10">
-      <h1 class="text-lg">
-        Auto Animate
-      </h1>
+      <h1 class="text-lg">Auto Animate</h1>
       <h5>Click emojis to remove them.</h5>
       <ul v-auto-animate>
         <li v-for="item in items" :key="item" @click="removeItem(item)">

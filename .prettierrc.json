@@ -1,6 +1,7 @@
 {
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "vueIndentScriptAndStyle": true
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "vueIndentScriptAndStyle": true,
+  "bracketSameLine": true
 }

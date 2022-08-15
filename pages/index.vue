@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  title: 'Nuxt-starter | Home',
-  alias: ['/']
-})
+  definePageMeta({
+    title: 'Nuxt-starter | Home',
+    alias: ['/'],
+  })
 </script>
 
 <template>
