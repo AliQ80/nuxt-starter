@@ -17,6 +17,7 @@
         "@nuxtjs/eslint-config-typescript",
         "plugin:nuxt/recommended",
         "plugin:json/recommended-with-comments",
+        "plugin:jsonc/recommended-with-jsonc",
         "plugin:markdown/recommended",
         "prettier"
     ],
@@ -40,6 +41,17 @@
                 "singleline": "never",
                 "multiline": "never"
             }
+        ],
+        "json/*": [
+            "error",
+            {
+                "allowComments": true,
+                "json/trailing-comma": true
+            }
+        ],
+        "jsonc/comma-dangle": [
+            "error",
+            "always"
         ]
     }
 }

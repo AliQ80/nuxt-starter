@@ -23,10 +23,11 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "lint": "eslint --ext \".js,.json,.md,.vue,.ts\" --ignore-path .gitignore .",
-    "lintfix": "eslint --fix --ext \".js,.json,.md,.vue,.ts\" --ignore-path .gitignore ."
+    "lint": "eslint --ext .js,.json,.md,.vue,.ts .",
+    "lintfix": "eslint --fix --ext .js,.json,.md,.vue,.ts ."
   },
   "devDependencies": {
+    "@babel/core": "^7.18.10",
     "@babel/eslint-parser": "^7.18.9",
     "@formkit/addons": "^1.0.0-beta.10",
     "@formkit/themes": "^1.0.0-beta.10",
