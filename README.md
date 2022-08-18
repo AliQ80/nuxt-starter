@@ -3,10 +3,13 @@
 ---
 
 - Nuxt 3
+- firebase
 - Tailwind 3
 - DaisyUI
 - FormKit
 - pinia
+- lint & prettier
+- husky & commitlint
 
 ---
 
@@ -21,12 +24,6 @@ Make sure to install the dependencies:
 ```bash
 # yarn
 yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
 ```
 
 ## Development Server
@@ -34,9 +31,6 @@ pnpm install --shamefully-hoist
 Start the development server on http://localhost:3000
 
 ```bash
-# npm
-npm run dev
-
 # yarn
 yarn dev -o
 ```
@@ -46,9 +40,6 @@ yarn dev -o
 Build the application for production:
 
 ```bash
-# npm
-npm run build
-
 # yarn
 yarn build
 ```
@@ -56,9 +47,6 @@ yarn build
 Locally preview production build:
 
 ```bash
-# npm
-npm run preview
-
 # yarn
 yarn preview
 ```
