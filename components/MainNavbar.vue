@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  // import { startWindToast } from '@mariojgt/wind-notify/packages/index.js'
   import { useFirebaseUserStore } from '~~/stores/userStore'
 
   const firebaseUser = useFirebaseUserStore()
@@ -7,6 +8,16 @@
 
   const isModalRegOpen = ref(false)
   const isModalLogOpen = ref(false)
+  // const position = ref('right')
+  // const displayTime = ref(20)
+  // title = you notification title
+  // message = you notification message
+  // alertType = warning, success, info , error
+  // time = How long that notification will be available need to be in frames
+  // position = top, bottom, right, left
+  // const toast = () => {
+  //   startWindToast('title', 'message', 'success', displayTime, position)
+  // }
 
   const signOut = async () => {
     isModalRegOpen.value = false
@@ -104,6 +115,23 @@
           Logout
         </NuxtLink>
       </div>
+
+      <!-- toast -->
+      <!-- <button class="btn btn-error" @click="toast">toast</button> -->
+      <!-- 
+      <button
+        class="btn btn-success"
+        @click="
+          startWindToast(
+            'Success Example!',
+            'This is a success',
+            'success',
+            displayTime,
+            position,
+          )
+        ">
+        success
+      </button> -->
 
       <!-- Register Modal -->
       <div
