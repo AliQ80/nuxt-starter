@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  // import { startWindToast } from '@mariojgt/wind-notify/packages/index.js'
+  import { POSITION, useToast } from 'vue-toastification'
   import { useFirebaseUserStore } from '~~/stores/userStore'
 
   const firebaseUser = useFirebaseUserStore()
@@ -8,22 +8,25 @@
 
   const isModalRegOpen = ref(false)
   const isModalLogOpen = ref(false)
-  // const position = ref('right')
-  // const displayTime = ref(20)
-  // title = you notification title
-  // message = you notification message
-  // alertType = warning, success, info , error
-  // time = How long that notification will be available need to be in frames
-  // position = top, bottom, right, left
-  // const toast = () => {
-  //   startWindToast('title', 'message', 'success', displayTime, position)
-  // }
 
   const signOut = async () => {
     isModalRegOpen.value = false
     isModalLogOpen.value = false
     await signOutUser()
   }
+
+  // toast
+  const toast = useToast()
+
+  const toastSuccess = () => {
+    toast.success('Registration Successful', {
+      timeout: 3000,
+      position: POSITION.BOTTOM_CENTER,
+    })
+  }
+  // const toastError = () => {
+  //   toast.error("Registration Failed")
+  // }
 </script>
 
 <template>
@@ -117,21 +120,9 @@
       </div>
 
       <!-- toast -->
-      <!-- <button class="btn btn-error" @click="toast">toast</button> -->
-      <!-- 
-      <button
-        class="btn btn-success"
-        @click="
-          startWindToast(
-            'Success Example!',
-            'This is a success',
-            'success',
-            displayTime,
-            position,
-          )
-        ">
-        success
-      </button> -->
+      <button class="btn btn-xs btn-success" @click="toastSuccess">
+        toast
+      </button>
 
       <!-- Register Modal -->
       <div

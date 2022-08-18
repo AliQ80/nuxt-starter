@@ -75,12 +75,15 @@
           :classes="formStyles" />
       </div>
 
+      <!-- submit button -->
       <FormKit
         type="submit"
         label="Login"
         input-class="$reset btn btn-info btn-block mt-4"
         @submit.prevent="login" />
     </FormKit>
+
+    <!-- Message for success or error -->
     <div
       v-if="firebaseUser.email"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">
