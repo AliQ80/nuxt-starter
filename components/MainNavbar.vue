@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
   import { POSITION, useToast } from 'vue-toastification'
   import { useFirebaseUserStore } from '~~/stores/userStore'
@@ -19,10 +20,12 @@
   const toast = useToast()
 
   const toastSuccess = () => {
+    console.log('before toastSuccess')
     toast.success('Registration Successful', {
-      timeout: 3000,
+      timeout: 3500,
       position: POSITION.BOTTOM_CENTER,
     })
+    console.log('after toastSuccess')
   }
   // const toastError = () => {
   //   toast.error("Registration Failed")
@@ -88,11 +91,13 @@
 
     <div class="navbar-end">
       <!-- display username and email if logged in -->
-      <div v-if="firebaseUser.email">
-        {{ firebaseUser.name }}
-        <br />
-        {{ firebaseUser.email }}
-      </div>
+      <transition>
+        <div v-if="firebaseUser.email">
+          {{ firebaseUser.name }}
+          <br />
+          {{ firebaseUser.email }}
+        </div>
+      </transition>
 
       <!-- The button to open modal -->
       <div v-if="!firebaseUser.email">
@@ -112,17 +117,14 @@
         </NuxtLink>
       </div>
       <div v-else>
-        <NuxtLink
-          class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
-          @click="signOut">
-          Logout
-        </NuxtLink>
+        <transition>
+          <NuxtLink
+            class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
+            @click="signOut">
+            Logout
+          </NuxtLink>
+        </transition>
       </div>
-
-      <!-- toast -->
-      <button class="btn btn-xs btn-success" @click="toastSuccess">
-        toast
-      </button>
 
       <!-- Register Modal -->
       <div
@@ -156,9 +158,21 @@
             @click="isModalLogOpen = !isModalLogOpen">
             ✕
           </NuxtLink>
-          <UserFormLogin />
+          <UserFormLogin @login-success="toastSuccess" />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+  }
+</style>

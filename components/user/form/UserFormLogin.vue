@@ -1,7 +1,13 @@
-<script setup>
+<!-- eslint-disable no-console -->
+<script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
   import { signInUser, signOutUser } from '~~/composables/useFirebase'
   import { useFirebaseUserStore } from '~~/stores/userStore'
+
+  const emit = defineEmits(['loginSuccess'])
+  // const emit = defineEmits<{
+  //   (e: 'loginSuccess'): void
+  // }>()
 
   // --- auto animate form ---
   const ccform = ref()
@@ -22,20 +28,31 @@
   const firebaseUser = useFirebaseUserStore()
   const errorCode = ref('')
 
-  const login = async (value) => {
-    await signOutUser()
+  const login = async (value: { email: string; password: string }) => {
+    signOutUser()
     await signInUser(value.email, value.password)
 
     if (firebaseUser.email) {
-      setTimeout(() => {
-        return navigateTo('/')
-      }, 5000)
+      emit('loginSuccess')
+
+      return navigateTo('/')
+      // setTimeout(() => {
+      //   return navigateTo('/')
+      // }, 5000)
     }
 
     if (firebaseUser.error !== '') {
+      console.log(
+        `🚀 => file: UserFormLogin.vue => line 45 => login => firebaseUser.error`,
+        firebaseUser.error,
+      )
       errorCode.value =
         firebaseUser.error.charAt(5).toUpperCase() +
         firebaseUser.error.slice(6).replaceAll('-', ' ')
+      console.log(
+        `🚀 => file: UserFormLogin.vue => line 47 => login => errorCode.value`,
+        errorCode.value,
+      )
     }
   }
 </script>

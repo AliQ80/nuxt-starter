@@ -5,10 +5,11 @@ export const useFirebaseUserStore = defineStore('userStore', {
   state: () => {
     return {
       // all these properties will have their type inferred automatically
-      // user: {},
+      user: {},
       email: '',
       name: '',
       error: '',
+      success: false,
     }
   },
   actions: {},

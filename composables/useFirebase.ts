@@ -14,16 +14,12 @@ import {
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
 
-export const createUser = async (
-  email: string,
-  password: string,
-  name: string,
-) => {
+export const createUser = (email: string, password: string, name: string) => {
   const auth = getAuth()
   // await setPersistence(auth, browserLocalPersistence)
   const firebaseUser = useFirebaseUserStore()
   let user = {}
-  await createUserWithEmailAndPassword(auth, email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       updateProfile(userCredential.user, {
