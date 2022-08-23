@@ -140,7 +140,7 @@
             @click="isModalRegOpen = !isModalRegOpen">
             ✕
           </NuxtLink>
-          <FormRegister />
+          <UserFormRegister />
         </div>
       </div>
 
@@ -158,7 +158,7 @@
             @click="isModalLogOpen = !isModalLogOpen">
             ✕
           </NuxtLink>
-          <FormLogin @login-success="toastSuccess" />
+          <UserFormLogin @login-success="toastSuccess" />
         </div>
       </div>
     </div>

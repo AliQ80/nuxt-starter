@@ -42,9 +42,17 @@
     }
 
     if (firebaseUser.error !== '') {
+      console.log(
+        `🚀 => file: UserFormLogin.vue => line 45 => login => firebaseUser.error`,
+        firebaseUser.error,
+      )
       errorCode.value =
         firebaseUser.error.charAt(5).toUpperCase() +
         firebaseUser.error.slice(6).replaceAll('-', ' ')
+      console.log(
+        `🚀 => file: UserFormLogin.vue => line 47 => login => errorCode.value`,
+        errorCode.value,
+      )
     }
   }
 </script>
