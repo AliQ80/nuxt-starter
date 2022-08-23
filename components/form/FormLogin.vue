@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
   import { signInUser, signOutUser } from '~~/composables/useFirebase'
   import { useFirebaseUserStore } from '~~/stores/userStore'
@@ -22,20 +22,22 @@
   const firebaseUser = useFirebaseUserStore()
   const errorCode = ref('')
 
-  const login = async (value) => {
-    await signOutUser()
+  const emit = defineEmits(['loginEvent'])
+
+  const login = async (value: { email: string; password: string }) => {
+    signOutUser()
     await signInUser(value.email, value.password)
 
     if (firebaseUser.email) {
-      setTimeout(() => {
-        return navigateTo('/')
-      }, 5000)
+      emit('loginEvent', 'Login', 'success')
+      return navigateTo('/')
     }
 
     if (firebaseUser.error !== '') {
       errorCode.value =
         firebaseUser.error.charAt(5).toUpperCase() +
         firebaseUser.error.slice(6).replaceAll('-', ' ')
+      emit('loginEvent', 'Login', errorCode.value)
     }
   }
 </script>
@@ -75,12 +77,15 @@
           :classes="formStyles" />
       </div>
 
+      <!-- submit button -->
       <FormKit
         type="submit"
         label="Login"
         input-class="$reset btn btn-info btn-block mt-4"
         @submit.prevent="login" />
     </FormKit>
+
+    <!-- Message for success or error -->
     <div
       v-if="firebaseUser.email"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">

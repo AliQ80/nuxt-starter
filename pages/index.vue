@@ -7,7 +7,8 @@
 
 <template>
   <div>
-    <FrontPage />
+    <!-- <FrontPage /> -->
     <!-- <TestComp /> -->
+    <h1 class="my-8 flex justify-center text-6xl">index page</h1>
   </div>
 </template>

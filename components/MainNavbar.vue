@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { POSITION, useToast } from 'vue-toastification'
   import { useFirebaseUserStore } from '~~/stores/userStore'
 
   const firebaseUser = useFirebaseUserStore()
@@ -12,6 +13,23 @@
     isModalRegOpen.value = false
     isModalLogOpen.value = false
     await signOutUser()
+  }
+
+  // toast
+  const toast = useToast()
+
+  const toastAuth = (origin: string, result: string) => {
+    if (result === 'success') {
+      toast.success(`${origin} Successful`, {
+        timeout: 3500,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    } else {
+      toast.error(`${origin} Failed: ${result}`, {
+        timeout: 5000,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    }
   }
 </script>
 
@@ -74,11 +92,13 @@
 
     <div class="navbar-end">
       <!-- display username and email if logged in -->
-      <div v-if="firebaseUser.email">
-        {{ firebaseUser.name }}
-        <br />
-        {{ firebaseUser.email }}
-      </div>
+      <transition>
+        <div v-if="firebaseUser.email">
+          {{ firebaseUser.name }}
+          <br />
+          {{ firebaseUser.email }}
+        </div>
+      </transition>
 
       <!-- The button to open modal -->
       <div v-if="!firebaseUser.email">
@@ -98,16 +118,18 @@
         </NuxtLink>
       </div>
       <div v-else>
-        <NuxtLink
-          class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
-          @click="signOut">
-          Logout
-        </NuxtLink>
+        <transition>
+          <NuxtLink
+            class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
+            @click="signOut">
+            Logout
+          </NuxtLink>
+        </transition>
       </div>
 
       <!-- Register Modal -->
       <div
-        v-if="!firebaseUser.email"
+        v-show="!firebaseUser.email"
         id="modal-register"
         class="modal"
         :class="{ 'modal-open': isModalRegOpen }">
@@ -119,13 +141,13 @@
             @click="isModalRegOpen = !isModalRegOpen">
             ✕
           </NuxtLink>
-          <UserFormRegister />
+          <FormRegister @register-event="toastAuth" />
         </div>
       </div>
 
       <!-- Login Modal -->
       <div
-        v-if="!firebaseUser.email"
+        v-show="!firebaseUser.email"
         id="modal-login"
         class="modal"
         :class="{ 'modal-open': isModalLogOpen }">
@@ -137,9 +159,21 @@
             @click="isModalLogOpen = !isModalLogOpen">
             ✕
           </NuxtLink>
-          <UserFormLogin />
+          <FormLogin @login-event="toastAuth" />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+  }
+</style>

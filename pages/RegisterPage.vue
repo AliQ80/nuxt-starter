@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <UserFormRegister />
+    <FormRegister />
   </div>
 </template>
 

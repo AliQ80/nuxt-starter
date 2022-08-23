@@ -22,20 +22,22 @@
   const firebaseUser = useFirebaseUserStore()
   const errorCode = ref('')
 
+  const emit = defineEmits(['registerEvent'])
+
   const register = async (value) => {
     await signOutUser()
     await createUser(value.email, value.password, value.name)
 
     if (firebaseUser.email) {
-      setTimeout(() => {
-        return navigateTo('/')
-      }, 5000)
+      emit('registerEvent', 'Registration', 'success')
+      return navigateTo('/')
     }
 
     if (firebaseUser.error !== '') {
       errorCode.value =
         firebaseUser.error.charAt(5).toUpperCase() +
         firebaseUser.error.slice(6).replaceAll('-', ' ')
+      emit('registerEvent', 'Registration', errorCode.value)
     }
   }
 </script>
