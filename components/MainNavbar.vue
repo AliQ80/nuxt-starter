@@ -1,4 +1,3 @@
-<!-- eslint-disable no-console -->
 <script setup lang="ts">
   import { POSITION, useToast } from 'vue-toastification'
   import { useFirebaseUserStore } from '~~/stores/userStore'
@@ -19,17 +18,19 @@
   // toast
   const toast = useToast()
 
-  const toastSuccess = () => {
-    console.log('before toastSuccess')
-    toast.success('Registration Successful', {
-      timeout: 3500,
-      position: POSITION.BOTTOM_CENTER,
-    })
-    console.log('after toastSuccess')
+  const toastAuth = (origin: string, result: string) => {
+    if (result === 'success') {
+      toast.success(`${origin} Successful`, {
+        timeout: 3500,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    } else {
+      toast.error(`${origin} Failed: ${result}`, {
+        timeout: 5000,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    }
   }
-  // const toastError = () => {
-  //   toast.error("Registration Failed")
-  // }
 </script>
 
 <template>
@@ -128,7 +129,7 @@
 
       <!-- Register Modal -->
       <div
-        v-if="!firebaseUser.email"
+        v-show="!firebaseUser.email"
         id="modal-register"
         class="modal"
         :class="{ 'modal-open': isModalRegOpen }">
@@ -140,13 +141,13 @@
             @click="isModalRegOpen = !isModalRegOpen">
             ✕
           </NuxtLink>
-          <FormRegister />
+          <FormRegister @register-event="toastAuth" />
         </div>
       </div>
 
       <!-- Login Modal -->
       <div
-        v-if="!firebaseUser.email"
+        v-show="!firebaseUser.email"
         id="modal-login"
         class="modal"
         :class="{ 'modal-open': isModalLogOpen }">
@@ -158,7 +159,7 @@
             @click="isModalLogOpen = !isModalLogOpen">
             ✕
           </NuxtLink>
-          <FormLogin @login-success="toastSuccess" />
+          <FormLogin @login-event="toastAuth" />
         </div>
       </div>
     </div>
