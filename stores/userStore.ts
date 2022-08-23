@@ -9,7 +9,6 @@ export const useFirebaseUserStore = defineStore('userStore', {
       email: '',
       name: '',
       error: '',
-      success: false,
     }
   },
   actions: {},
