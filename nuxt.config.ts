@@ -19,7 +19,7 @@ export default defineNuxtConfig({
         plugins: {
           tailwindcss: {
             cssPath: '~/assets/css/tailwind.css',
-            configPath: 'tailwind.config.js',
+            configPath: 'tailwind.config.ts',
             exposeConfig: false,
             config: {
               content: ['content/**/**.md'],
