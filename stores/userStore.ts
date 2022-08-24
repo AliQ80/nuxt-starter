@@ -8,6 +8,7 @@ export const useFirebaseUserStore = defineStore('userStore', {
       user: {},
       email: '',
       name: '',
+      verified: false,
       error: '',
     }
   },

@@ -29,7 +29,8 @@ export const createUser = async (
       updateProfile(userCredential.user, {
         displayName: name,
       })
-      firebaseUser.email = email
+      firebaseUser.email = userCredential.user.email
+      firebaseUser.verified = userCredential.user.emailVerified
       firebaseUser.name = name
       firebaseUser.error = ''
       user = userCredential.user
@@ -37,6 +38,7 @@ export const createUser = async (
     .catch((error) => {
       firebaseUser.email = ''
       firebaseUser.name = ''
+      firebaseUser.verified = false
       firebaseUser.error = error.code
     })
   return user
@@ -53,11 +55,13 @@ export const signInUser = async (email: string, password: string) => {
       firebaseUser.email = userCredential.user.email
       firebaseUser.name = userCredential.user.displayName
       firebaseUser.error = ''
+      firebaseUser.verified = userCredential.user.emailVerified
       user = userCredential.user
     })
     .catch((error) => {
       firebaseUser.email = ''
       firebaseUser.name = ''
+      firebaseUser.verified = false
       firebaseUser.error = error.code
     })
   return user
@@ -74,11 +78,13 @@ export const initUser = () => {
       // https://firebase.google.com/docs/reference/js/firebase.User
       firebaseUser.email = user.email
       firebaseUser.name = user.displayName
+      firebaseUser.verified = user.emailVerified
       firebaseUser.error = ''
     } else {
       // User is signed out
       firebaseUser.email = ''
       firebaseUser.name = ''
+      firebaseUser.verified = false
       firebaseUser.error = ''
     }
   })
