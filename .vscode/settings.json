@@ -32,5 +32,11 @@
   ],
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "conventionalCommits.scopes": [
+    "firebase",
+    "pinia",
+    "auth",
+    "test"
+  ]
 }
