@@ -10,6 +10,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   updateProfile,
+  sendEmailVerification,
+  User,
 } from 'firebase/auth'
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
@@ -22,15 +24,15 @@ export const createUser = async (
   const auth = getAuth()
   // await setPersistence(auth, browserLocalPersistence)
   const firebaseUser = useFirebaseUserStore()
-  let user = {}
+  let user: User
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       updateProfile(userCredential.user, {
         displayName: name,
       })
-      firebaseUser.email = userCredential.user.email
       firebaseUser.verified = userCredential.user.emailVerified
+      firebaseUser.email = userCredential.user.email
       firebaseUser.name = name
       firebaseUser.error = ''
       user = userCredential.user
@@ -41,6 +43,7 @@ export const createUser = async (
       firebaseUser.verified = false
       firebaseUser.error = error.code
     })
+  await sendEmailVerification(user)
   return user
 }
 
