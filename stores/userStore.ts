@@ -12,9 +12,21 @@ export const useFirebaseUserStore = defineStore('userStore', {
       error: '',
     }
   },
-  actions: {},
 
-  getters: {},
+  getters: {
+    getUser: (state) => state.user,
+    getEmail: (state) => state.email,
+    getName: (state) => state.name,
+    getVerified: (state) => state.verified,
+    getError(state) {
+      const errorMessage =
+        state.error.charAt(5).toUpperCase() +
+        state.error.slice(6).replaceAll('-', ' ')
+      return errorMessage
+    },
+  },
+
+  actions: {},
 
   persist: true,
 })
