@@ -1,10 +1,7 @@
 <script setup lang="ts">
-  import { POSITION, useToast } from 'vue-toastification'
   import { useFirebaseUserStore } from '~~/stores/userStore'
 
   const firebaseUser = useFirebaseUserStore()
-
-  const route = useRoute()
 
   const isModalRegOpen = ref(false)
   const isModalLogOpen = ref(false)
@@ -13,23 +10,6 @@
     isModalRegOpen.value = false
     isModalLogOpen.value = false
     await signOutUser()
-  }
-
-  // toast
-  const toast = useToast()
-
-  const toastAuth = (origin: string, result: string) => {
-    if (result === 'success') {
-      toast.success(`${origin} Successful`, {
-        timeout: 3500,
-        position: POSITION.BOTTOM_CENTER,
-      })
-    } else {
-      toast.error(`${origin} Failed: ${result}`, {
-        timeout: 5000,
-        position: POSITION.BOTTOM_CENTER,
-      })
-    }
   }
 </script>
 
@@ -103,52 +83,28 @@
       <!-- The button to open modal -->
       <div v-if="!firebaseUser.email">
         <NuxtLink
-          v-if="route.name !== 'register'"
-          to="#modal-register"
-          class="btn btn-success btn-xs mx-2 mt-2 h-10 w-24"
-          @click="isModalRegOpen = !isModalRegOpen">
-          Register
-        </NuxtLink>
-        <NuxtLink
-          v-if="route.name !== 'login'"
-          to="#modal-Login"
+          to="#modal-start"
           class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
           @click="isModalLogOpen = !isModalLogOpen">
-          Login
+          Start Here
         </NuxtLink>
       </div>
+
+      <!-- The button to logout -->
       <div v-else>
         <transition>
           <NuxtLink
             class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
             @click="signOut">
-            Logout
+            Log Out
           </NuxtLink>
         </transition>
       </div>
 
-      <!-- Register Modal -->
+      <!-- Start Modal -->
       <div
         v-show="!firebaseUser.email"
-        id="modal-register"
-        class="modal"
-        :class="{ 'modal-open': isModalRegOpen }">
-        <div class="modal-box relative">
-          <NuxtLink
-            to="#"
-            for="modal-register"
-            class="btn btn-sm btn-circle absolute right-2 top-2"
-            @click="isModalRegOpen = !isModalRegOpen">
-            ✕
-          </NuxtLink>
-          <FormRegister @register-event="toastAuth" />
-        </div>
-      </div>
-
-      <!-- Login Modal -->
-      <div
-        v-show="!firebaseUser.email"
-        id="modal-login"
+        id="modal-start"
         class="modal"
         :class="{ 'modal-open': isModalLogOpen }">
         <div class="modal-box relative">
@@ -159,7 +115,7 @@
             @click="isModalLogOpen = !isModalLogOpen">
             ✕
           </NuxtLink>
-          <FormLogin @login-event="toastAuth" />
+          <FormStart />
         </div>
       </div>
     </div>

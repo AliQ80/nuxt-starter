@@ -11,10 +11,24 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
-  User,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth'
 
 import { useFirebaseUserStore } from '~~/stores/userStore'
+
+const setUserStore = (
+  email: string,
+  username: string,
+  verified: boolean,
+  error: string,
+) => {
+  const firebaseUser = useFirebaseUserStore()
+  firebaseUser.email = email
+  firebaseUser.name = username
+  firebaseUser.verified = verified
+  firebaseUser.error = error
+}
 
 export const createUser = async (
   email: string,
@@ -23,75 +37,80 @@ export const createUser = async (
 ) => {
   const auth = getAuth()
   // await setPersistence(auth, browserLocalPersistence)
-  const firebaseUser = useFirebaseUserStore()
-  let user: User
+  // const firebaseUser = useFirebaseUserStore()
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       updateProfile(userCredential.user, {
         displayName: name,
       })
-      firebaseUser.verified = userCredential.user.emailVerified
-      firebaseUser.email = userCredential.user.email
-      firebaseUser.name = name
-      firebaseUser.error = ''
-      user = userCredential.user
+      const user = userCredential.user
+      setUserStore(user.email, name, user.emailVerified, '')
+      sendEmailVerification(user)
+      return user
     })
     .catch((error) => {
-      firebaseUser.email = ''
-      firebaseUser.name = ''
-      firebaseUser.verified = false
-      firebaseUser.error = error.code
+      setUserStore('', '', false, error.code)
     })
-  await sendEmailVerification(user)
-  return user
 }
 
 export const signInUser = async (email: string, password: string) => {
   const auth = getAuth()
-  let user = {}
   // await setPersistence(auth, browserLocalPersistence)
-  const firebaseUser = useFirebaseUserStore()
   await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
-      firebaseUser.email = userCredential.user.email
-      firebaseUser.name = userCredential.user.displayName
-      firebaseUser.error = ''
-      firebaseUser.verified = userCredential.user.emailVerified
-      user = userCredential.user
+      const user = userCredential.user
+      setUserStore(user.email, user.displayName, user.emailVerified, '')
+      return user
     })
     .catch((error) => {
-      firebaseUser.email = ''
-      firebaseUser.name = ''
-      firebaseUser.verified = false
-      firebaseUser.error = error.code
+      setUserStore('', '', false, error.code)
     })
-  return user
 }
 
 export const initUser = () => {
   const auth = getAuth()
   // await setPersistence(auth, browserLocalPersistence)
-  const firebaseUser = useFirebaseUserStore()
-
+  // const firebaseUser = useFirebaseUserStore()
   const credentials = onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
-      firebaseUser.email = user.email
-      firebaseUser.name = user.displayName
-      firebaseUser.verified = user.emailVerified
-      firebaseUser.error = ''
+      setUserStore(user.email, user.displayName, user.emailVerified, '')
     } else {
       // User is signed out
-      firebaseUser.email = ''
-      firebaseUser.name = ''
-      firebaseUser.verified = false
-      firebaseUser.error = ''
+      setUserStore('', '', false, '')
     }
   })
   return credentials
+}
+
+export const googleSignIn = async () => {
+  const auth = getAuth()
+  const provider = new GoogleAuthProvider()
+  // const firebaseUser = useFirebaseUserStore()
+  await signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      // const credential = GoogleAuthProvider.credentialFromResult(result)
+      // const token = credential.accessToken
+      // The signed-in user info.
+      const user = result.user
+      setUserStore(user.email, user.displayName, user.emailVerified, '')
+
+      return user
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      // const errorCode = error.code
+      // const errorMessage = error.message
+      // The email of the user's account used.
+      // const email = error.customData.email
+      // The AuthCredential type that was used.
+      // const credential = GoogleAuthProvider.credentialFromError(error)
+      setUserStore('', '', false, error.code)
+    })
 }
 
 export const signOutUser = async () => {
