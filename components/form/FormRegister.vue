@@ -34,9 +34,7 @@
     }
 
     if (firebaseUser.error !== '') {
-      errorCode.value =
-        firebaseUser.error.charAt(5).toUpperCase() +
-        firebaseUser.error.slice(6).replaceAll('-', ' ')
+      errorCode.value = firebaseUser.getError
       emit('registerEvent', 'Registration', errorCode.value)
     }
   }

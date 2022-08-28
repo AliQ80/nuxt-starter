@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
-  import { signInUser, signOutUser } from '~~/composables/useFirebase'
+  import {
+    signInUser,
+    signOutUser,
+    googleSignIn,
+  } from '~~/composables/useFirebase'
   import { useFirebaseUserStore } from '~~/stores/userStore'
 
   // --- auto animate form ---
@@ -24,10 +28,7 @@
 
   const emit = defineEmits(['loginEvent'])
 
-  const login = async (value: { email: string; password: string }) => {
-    signOutUser()
-    await signInUser(value.email, value.password)
-
+  const checkLoginStatus = () => {
     if (firebaseUser.email) {
       emit('loginEvent', 'Login', 'success')
       return navigateTo('/')
@@ -38,6 +39,17 @@
       emit('loginEvent', 'Login', errorCode.value)
     }
   }
+
+  const login = async (value: { email: string; password: string }) => {
+    signOutUser()
+    await signInUser(value.email, value.password)
+    checkLoginStatus()
+  }
+
+  const googleLogin = async () => {
+    await googleSignIn()
+    checkLoginStatus()
+  }
 </script>
 
 <template>
@@ -47,7 +59,8 @@
     <button
       aria-label="Continue with google"
       role="button"
-      class="mb-10 flex items-center rounded-lg border border-gray-700 bg-white py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1 lg:w-80">
+      class="mb-10 flex items-center rounded-lg border border-gray-700 bg-white py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1 lg:w-80"
+      @click="googleLogin">
       <div class="mx-auto flex items-center">
         <svg
           width="19"
@@ -69,15 +82,15 @@
             fill="#EB4335" />
         </svg>
         <p class="ml-4 text-base font-medium text-gray-700">
-          Continue with Google
+          Log in with Google
         </p>
       </div>
     </button>
 
-    <!-- <div class="text-2xl font-semibold">
+    <div class="text-2xl font-semibold">
       <p>OR</p>
     </div>
-    <hr class="mx-auto mb-10 mb-8 flex w-40" /> -->
+    <hr class="mx-auto mb-10 flex w-80" />
 
     <FormKit
       id="login"
@@ -87,7 +100,7 @@
       :actions="false"
       @submit="login">
       <h1 class="mb-4 text-center text-xl font-semibold text-gray-300">
-        Login with your Email
+        Log in with your Email
       </h1>
       <!-- <hr class="mx-auto mb-8 flex" /> -->
       <FormKit
@@ -113,7 +126,7 @@
       <!-- submit button -->
       <FormKit
         type="submit"
-        label="Login"
+        label="Log in"
         input-class="$reset btn btn-info btn-block mt-4"
         @submit.prevent="login" />
     </FormKit>
@@ -129,9 +142,7 @@
       v-if="firebaseUser.error"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">
       <h2 class="text-2xl font-semibold text-rose-600">Login Failed!</h2>
-      <h2 class="font-medium">
-        {{ errorCode }}
-      </h2>
+      <h2 class="font-medium">Error: {{ errorCode }}</h2>
     </div>
   </div>
 </template>
