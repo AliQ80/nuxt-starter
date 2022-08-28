@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // https://firebase.google.com/docs/auth/web/start
 
 // add imports to activate firebase persistance
