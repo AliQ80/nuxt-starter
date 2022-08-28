@@ -25,7 +25,6 @@
 
   const firebaseUser = useFirebaseUserStore()
   const errorCode = ref('')
-
   const emit = defineEmits(['loginEvent'])
 
   const checkLoginStatus = () => {
@@ -55,7 +54,7 @@
 <template>
   <div
     ref="ccform"
-    class="mx-auto grid grid-cols-1 justify-items-center py-10 lg:w-96">
+    class="mx-auto grid grid-cols-1 justify-items-center pt-11 lg:w-96">
     <button
       aria-label="Continue with google"
       role="button"
@@ -90,7 +89,7 @@
     <div class="text-2xl font-semibold">
       <p>OR</p>
     </div>
-    <hr class="mx-auto mb-10 flex w-80" />
+    <hr class="mx-auto mb-10 flex w-60 lg:w-80" />
 
     <FormKit
       id="login"
@@ -124,11 +123,13 @@
       </div>
 
       <!-- submit button -->
-      <FormKit
-        type="submit"
-        label="Log in"
-        input-class="$reset btn btn-info btn-block mt-4"
-        @submit.prevent="login" />
+      <div class="mt-5">
+        <FormKit
+          type="submit"
+          label="Log in"
+          input-class="$reset btn btn-info btn-block mt-44"
+          @submit.prevent="login" />
+      </div>
     </FormKit>
 
     <!-- Message for success or error -->
