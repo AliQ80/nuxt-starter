@@ -1,11 +1,12 @@
 <script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
-  import {
-    signInUser,
-    signOutUser,
-    googleSignIn,
-  } from '~~/composables/useFirebase'
-  import { useFirebaseUserStore } from '~~/stores/userStore'
+  // import {
+  //   signInUser,
+  //   signOutUser,
+  //   googleSignIn,
+  // } from '~~/composables/useFirebase'
+  // import { useFirebaseUserStore } from '~~/stores/userStore'
+  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
 
   // --- auto animate form ---
   const ccform = ref()
@@ -23,31 +24,73 @@
     // message: 'text-xs text-red-500 font-light'
   })
 
-  const firebaseUser = useFirebaseUserStore()
+  // const firebaseUser = useFirebaseUserStore()
   const errorCode = ref('')
   const emit = defineEmits(['loginEvent'])
 
-  const checkLoginStatus = () => {
-    if (firebaseUser.email) {
-      emit('loginEvent', 'Login', 'success')
-      return navigateTo('/')
-    }
+  // const checkLoginStatus = () => {
+  //   if (firebaseUser.email) {
+  //     emit('loginEvent', 'Login', 'success')
+  //     return navigateTo('/')
+  //   }
 
-    if (firebaseUser.error !== '') {
-      errorCode.value = firebaseUser.getError
-      emit('loginEvent', 'Login', errorCode.value)
-    }
-  }
+  //   if (firebaseUser.error !== '') {
+  //     errorCode.value = firebaseUser.getError
+  //     emit('loginEvent', 'Login', errorCode.value)
+  //   }
+  // }
 
-  const login = async (value: { email: string; password: string }) => {
-    signOutUser()
-    await signInUser(value.email, value.password)
-    checkLoginStatus()
-  }
+  // const login = async (value: { email: string; password: string }) => {
+  //   signOutUser()
+  //   await signInUser(value.email, value.password)
+  //   checkLoginStatus()
+  // }
 
   const googleLogin = async () => {
     await googleSignIn()
     checkLoginStatus()
+  }
+
+  // --- Supabase Auth ---
+
+  const supabaseUser = useSupabaseUserStore()
+
+  const checkLoginStatus = () => {
+    if (supabaseUser.email) {
+      emit('loginEvent', 'Registration', 'success')
+      return navigateTo('/')
+    }
+
+    if (supabaseUser.error !== '') {
+      errorCode.value = supabaseUser.getError
+      emit('loginEvent', 'Registration', errorCode.value)
+    }
+  }
+
+  const client = useSupabaseClient()
+  const loading = ref(false)
+
+  const handleLogin = async (value: {
+    email: string
+    password: string
+    name: string
+  }) => {
+    try {
+      loading.value = true
+      const { user, error } = await client.auth.signIn({
+        email: value.email,
+        password: value.password,
+      })
+      if (user) {
+        supabaseUser.email = user.email
+        checkLoginStatus()
+      }
+      if (error) throw error
+    } catch (error) {
+      alert(error.error_description || error.message)
+    } finally {
+      loading.value = false
+    }
   }
 </script>
 
@@ -95,9 +138,9 @@
       id="login"
       type="form"
       form-class="lg:w-96"
-      submit-label="Login"
+      submit-label="Log In"
       :actions="false"
-      @submit="login">
+      @submit="handleLogin">
       <h1 class="mb-4 text-center text-xl font-semibold text-gray-300">
         Log in with your Email
       </h1>
@@ -128,19 +171,19 @@
           type="submit"
           label="Log in"
           input-class="$reset btn btn-info btn-block mt-44"
-          @submit.prevent="login" />
+          @submit.prevent="handleLogin" />
       </div>
     </FormKit>
 
     <!-- Message for success or error -->
     <div
-      v-if="firebaseUser.email"
+      v-if="supabaseUser.email"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">
       <h2 class="text-2xl font-semibold text-emerald-400">Login successful!</h2>
       <progress class="progress progress-success mt-4 w-56" />
     </div>
     <div
-      v-if="firebaseUser.error"
+      v-if="supabaseUser.error"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">
       <h2 class="text-2xl font-semibold text-rose-600">Login Failed!</h2>
       <h2 class="font-medium">Error: {{ errorCode }}</h2>

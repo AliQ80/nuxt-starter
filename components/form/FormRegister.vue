@@ -1,12 +1,13 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
-  import {
-    createUser,
-    signOutUser,
-    googleSignIn,
-  } from '~~/composables/useFirebase'
-  import { useFirebaseUserStore } from '~~/stores/userStore'
-
+  // import {
+  //   createUser,
+  //   signOutUser,
+  //   googleSignIn,
+  // } from '~~/composables/useFirebase'
+  // import { useFirebaseUserStore } from '~~/stores/userStore'
+  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
   // --- auto animate form ---
   const ccform = ref()
   onMounted(() => {
@@ -23,35 +24,78 @@
     // message: 'text-xs text-red-500 font-light'
   })
 
-  const firebaseUser = useFirebaseUserStore()
-  const errorCode = ref('')
   const emit = defineEmits(['registerEvent'])
 
+  // --- Firebase Auth ---
+
+  // const firebaseUser = useFirebaseUserStore()
+  const errorCode = ref('')
+
+  // const checkLoginStatus = () => {
+  //   if (firebaseUser.email) {
+  //     emit('registerEvent', 'Registration', 'success')
+  //     return navigateTo('/')
+  //   }
+
+  //   if (firebaseUser.error !== '') {
+  //     errorCode.value = firebaseUser.getError
+  //     emit('registerEvent', 'Registration', errorCode.value)
+  //   }
+  // }
+  // const register = async (value: {
+  //   email: string
+  //   password: string
+  //   name: string
+  // }) => {
+  //   await signOutUser()
+  //   await createUser(value.email, value.password, value.name)
+  //   checkLoginStatus()
+  // }
+  const googleLogin = async () => {
+    await googleSignIn()
+    checkLoginStatus()
+  }
+
+  // --- Supabase Auth ---
+
+  const supabaseUser = useSupabaseUserStore()
+
   const checkLoginStatus = () => {
-    if (firebaseUser.email) {
+    if (supabaseUser.email) {
       emit('registerEvent', 'Registration', 'success')
       return navigateTo('/')
     }
 
-    if (firebaseUser.error !== '') {
-      errorCode.value = firebaseUser.getError
+    if (supabaseUser.error !== '') {
+      errorCode.value = supabaseUser.getError
       emit('registerEvent', 'Registration', errorCode.value)
     }
   }
 
-  const register = async (value: {
+  const client = useSupabaseClient()
+  const loading = ref(false)
+
+  const handleSignup = async (value: {
     email: string
     password: string
     name: string
   }) => {
-    await signOutUser()
-    await createUser(value.email, value.password, value.name)
-    checkLoginStatus()
-  }
-
-  const googleLogin = async () => {
-    await googleSignIn()
-    checkLoginStatus()
+    try {
+      loading.value = true
+      const { user, error } = await client.auth.signUp({
+        email: value.email,
+        password: value.password,
+      })
+      if (user) {
+        supabaseUser.email = user.email
+        checkLoginStatus()
+      }
+      if (error) throw error
+    } catch (error) {
+      alert(error.error_description || error.message)
+    } finally {
+      loading.value = false
+    }
   }
 </script>
 
@@ -101,7 +145,7 @@
       form-class="lg:w-96"
       submit-label="Register"
       :actions="false"
-      @submit="register">
+      @submit="handleSignup">
       <h1 class="mb-4 text-center text-xl font-semibold text-gray-300">
         Register Now For Free!
       </h1>
@@ -143,10 +187,10 @@
         type="submit"
         label="Register"
         input-class="$reset btn btn-success btn-block mt-4"
-        @submit.prevent="register" />
+        @submit.prevent="handleSignup" />
     </FormKit>
     <div
-      v-if="firebaseUser.email"
+      v-if="supabaseUser.email"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">
       <h2 class="text-2xl font-semibold text-emerald-400">
         Registeration successful!
@@ -154,7 +198,7 @@
       <progress class="progress progress-success mt-4 w-56" />
     </div>
     <div
-      v-if="firebaseUser.error"
+      v-if="supabaseUser.error"
       class="mx-auto grid w-96 grid-cols-1 justify-items-center">
       <h2 class="text-2xl font-semibold text-rose-600">
         Registeration Failed!

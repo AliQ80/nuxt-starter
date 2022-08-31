@@ -1,15 +1,26 @@
 <script setup lang="ts">
-  import { useFirebaseUserStore } from '~~/stores/userStore'
+  // import { useFirebaseUserStore } from '~~/stores/userStore'
+  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
 
-  const firebaseUser = useFirebaseUserStore()
+  // const firebaseUser = useFirebaseUserStore()
+  const supabaseUser = useSupabaseUserStore()
 
   const isModalRegOpen = ref(false)
   const isModalLogOpen = ref(false)
 
-  const signOut = async () => {
+  // const signOut = async () => {
+  //   isModalRegOpen.value = false
+  //   isModalLogOpen.value = false
+  //   await signOutUser()
+  // }
+
+  const client = useSupabaseClient()
+  const logout = async () => {
     isModalRegOpen.value = false
     isModalLogOpen.value = false
-    await signOutUser()
+    supabaseUser.email = ''
+    await client.auth.signOut()
+    return navigateTo('/')
   }
 </script>
 
@@ -73,15 +84,15 @@
     <div class="navbar-end">
       <!-- display username and email if logged in -->
       <transition>
-        <div v-if="firebaseUser.email">
-          {{ firebaseUser.name }}
+        <div v-if="supabaseUser.email">
+          {{ supabaseUser.name }}
           <br />
-          {{ firebaseUser.email }}
+          {{ supabaseUser.email }}
         </div>
       </transition>
 
       <!-- The button to open modal -->
-      <div v-if="!firebaseUser.email">
+      <div v-if="!supabaseUser.email">
         <NuxtLink
           to="#modal-start"
           class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
@@ -95,7 +106,7 @@
         <transition>
           <NuxtLink
             class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
-            @click="signOut">
+            @click="logout">
             Log Out
           </NuxtLink>
         </transition>
@@ -103,7 +114,7 @@
 
       <!-- Start Modal -->
       <div
-        v-show="!firebaseUser.email"
+        v-show="!supabaseUser.email"
         id="modal-start"
         class="modal"
         :class="{ 'modal-open': isModalLogOpen }">
