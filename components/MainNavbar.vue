@@ -1,6 +1,7 @@
 <script setup lang="ts">
   // import { useFirebaseUserStore } from '~~/stores/userStore'
   import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  // import { useAuth } from '~~/composables/useSupabase'
 
   // const firebaseUser = useFirebaseUserStore()
   const supabaseUser = useSupabaseUserStore()
@@ -19,7 +20,10 @@
     isModalRegOpen.value = false
     isModalLogOpen.value = false
     supabaseUser.email = ''
+    supabaseUser.name = ''
+    supabaseUser.authenticated = false
     await client.auth.signOut()
+    // useAuth()
     return navigateTo('/')
   }
 </script>

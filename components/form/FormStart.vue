@@ -23,12 +23,12 @@
     if (result === 'success') {
       toast.success(`${origin} Successful`, {
         timeout: 3500,
-        position: POSITION.BOTTOM_CENTER,
+        position: POSITION.BOTTOM_RIGHT,
       })
     } else {
       toast.error(`${origin} Failed: ${result}`, {
         timeout: 5000,
-        position: POSITION.BOTTOM_CENTER,
+        position: POSITION.BOTTOM_RIGHT,
       })
     }
   }
