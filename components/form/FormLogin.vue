@@ -1,5 +1,3 @@
-<!-- eslint-disable no-console -->
-<!-- eslint-disable vue/no-duplicate-attributes -->
 <script setup lang="ts">
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'

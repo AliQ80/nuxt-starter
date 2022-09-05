@@ -1,4 +1,3 @@
-<!-- eslint-disable no-console -->
 <script setup lang="ts">
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
