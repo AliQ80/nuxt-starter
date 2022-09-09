@@ -76,7 +76,7 @@
     <div class="navbar-end">
       <!-- display username and email if logged in -->
       <transition>
-        <div v-if="userStore.getAuthenticated">
+        <div v-if="userStore.getConfirmed">
           {{ userStore.name }}
           <br />
           {{ userStore.email }}
@@ -84,7 +84,7 @@
       </transition>
 
       <!-- The button to open modal -->
-      <div v-if="!userStore.getAuthenticated">
+      <div v-if="!userStore.getConfirmed">
         <NuxtLink
           to="#modal-start"
           class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
