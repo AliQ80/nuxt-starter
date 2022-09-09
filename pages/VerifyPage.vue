@@ -18,7 +18,10 @@
           Your Email
         </h2>
         <p class="mb-8 text-2xl font-semibold md:text-3xl">
-          click the link we sent to your email.
+          Click the link we sent to your email, then login again.
+        </p>
+        <p class="mb-8 text-2xl font-semibold md:text-3xl">
+          Or if you lost your verification email, click the button below.
         </p>
         <NuxtLink
           rel="noopener noreferrer"

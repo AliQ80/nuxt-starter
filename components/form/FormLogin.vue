@@ -157,21 +157,5 @@
         <progress class="progress progress-info mt-3 w-56" />
       </div>
     </div>
-    <div class="h-12">
-      <div
-        v-if="userStore.email"
-        class="mx-auto grid w-96 grid-cols-1 justify-items-center">
-        <h2 class="text-2xl font-semibold text-emerald-400">
-          Login successful!
-        </h2>
-        <progress class="progress progress-success mt-4 w-56" />
-      </div>
-      <div
-        v-if="userStore.error"
-        class="mx-auto grid w-96 grid-cols-1 justify-items-center">
-        <h2 class="text-2xl font-semibold text-rose-600">Login Failed!</h2>
-        <h2 class="font-medium">Error: {{ userStore.getError }}</h2>
-      </div>
-    </div>
   </div>
 </template>

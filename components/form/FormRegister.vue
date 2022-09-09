@@ -28,17 +28,11 @@
   const emit = defineEmits(['registerEvent'])
 
   const checkLoginStatus = () => {
-    if (userStore.email && userStore.authenticated) {
+    if (userStore.email) {
       emit('registerEvent', 'Registration', 'success')
       reset('registration')
-      return navigateTo('/')
+      return navigateTo('/verify')
     }
-
-    // if (!userStore.authenticated) {
-    //   emit('registerEvent', 'Login', 'Check your email to verify your account')
-    //   reset('login')
-    //   return navigateTo('/verify')
-    // }
 
     if (userStore.error !== '') {
       reset('registration')
@@ -66,33 +60,6 @@
     isLoading.value = false
     checkLoginStatus()
   }
-  // const handleSignup = async (value: {
-  //   email: string
-  //   password: string
-  //   username: string
-  // }) => {
-  //   try {
-  //     isLoading.value = true
-  //     const { user, error } = await client.auth.signUp({
-  //       email: value.email,
-  //       password: value.password,
-  //     })
-  //     if (user) {
-  //       userStore.email = user.email
-  //       userStore.name = value.username
-  //       userStore.error = ''
-  //       checkLoginStatus()
-  //     }
-  //     if (error) throw error
-  //   } catch (error) {
-  //     userStore.email = ''
-  //     userStore.name = ''
-  //     userStore.error = error.message
-  //     checkLoginStatus()
-  //   } finally {
-  //     isLoading.value = false
-  //   }
-  // }
 </script>
 
 <template>
@@ -147,14 +114,6 @@
       <h1 class="mb-4 text-center text-xl font-semibold text-gray-300">
         Register Now For Free!
       </h1>
-
-      <!-- <FormKit
-        type="text"
-        prefix-icon="avatarMan"
-        name="username"
-        label="Your name"
-        validation="required"
-        :classes="formStyles" /> -->
       <FormKit
         type="email"
         prefix-icon="email"
@@ -197,26 +156,6 @@
         v-show="isLoading"
         class="mx-auto grid w-96 grid-cols-1 justify-items-center">
         <progress class="progress progress-info mt-3 w-56" />
-      </div>
-    </div>
-    <div class="h-12">
-      <div
-        v-if="userStore.getEmail"
-        class="mx-auto grid w-96 grid-cols-1 justify-items-center">
-        <h2 class="text-2xl font-semibold text-emerald-400">
-          Registeration successful!
-        </h2>
-        <progress class="progress progress-success mt-4 w-56" />
-      </div>
-      <div
-        v-if="userStore.getError"
-        class="mx-auto grid w-96 grid-cols-1 justify-items-center">
-        <h2 class="text-2xl font-semibold text-rose-600">
-          Registeration Failed!
-        </h2>
-        <h2 class="font-medium">
-          {{ userStore.getError }}
-        </h2>
       </div>
     </div>
   </div>

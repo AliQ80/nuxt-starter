@@ -64,9 +64,9 @@ export const emailRegister = async (value: {
       password: value.password,
     })
     if (user) {
-      // supabaseUser.email = user.email
+      userStore.email = user.email
       // supabaseUser.name = value.username
-      // supabaseUser.error = ''
+      userStore.error = ''
       // return navigateTo('/verify')
     }
     if (error) throw error
