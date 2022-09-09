@@ -2,10 +2,10 @@
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userSupaStore'
-  import { emailRegister } from '@/composables/useSupabase'
+  import { emailRegister, providerLogin } from '@/composables/useSupabase'
 
   const userStore = useSupabaseUserStore()
-  const client = useSupabaseClient()
+  // const client = useSupabaseClient()
 
   // --- auto animate form ---
   const ccform = ref()
@@ -28,26 +28,32 @@
   const emit = defineEmits(['registerEvent'])
 
   const checkLoginStatus = () => {
-    if (userStore.email) {
-      emit('registerEvent', 'Registration', 'success')
+    if (userStore.email && userStore.confirmed) {
       reset('registration')
-      return navigateTo('/verify')
+      emit('registerEvent', 'registration', 'success')
+      return navigateTo('/')
     }
 
     if (userStore.error !== '') {
-      reset('registration')
-      emit('registerEvent', 'Registration', userStore.getError)
+      if (userStore.error === 'Email not confirmed') {
+        emit('registerEvent', 'registration', userStore.getError)
+        return navigateTo('/verify')
+      } else {
+        emit('registerEvent', 'registration', userStore.getError)
+        return navigateTo('/')
+      }
     }
   }
 
-  const providerLogin = async (
+  const handleProviderLogin = async (
     provider: 'github' | 'google' | 'apple' | 'discord',
   ) => {
-    const { error } = await client.auth.signIn({ provider })
+    isLoading.value = true
+    await providerLogin(provider)
+    userStore.authModalOff()
+    reset('register')
+    isLoading.value = false
     checkLoginStatus()
-    if (error) {
-      return alert('Something went wrong !')
-    }
   }
 
   // --- Supabase Auth ---
@@ -71,7 +77,7 @@
         aria-label="Continue with google"
         role="button"
         class="mb-10 flex items-center rounded-lg border border-gray-700 bg-white py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1 lg:w-80"
-        @click="providerLogin('google')">
+        @click="handleProviderLogin('google')">
         <div class="mx-auto flex items-center">
           <svg
             width="19"

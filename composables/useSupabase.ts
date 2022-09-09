@@ -38,9 +38,8 @@ export const emailLogin = async (value: {
       userStore.name = data.username
       userStore.email = user.email
       userStore.error = ''
-
-      if (user.role === 'authenticated') {
-        userStore.authenticated = true
+      if (user.confirmed_at) {
+        userStore.confirmed = true
       }
     }
     if (error) throw error
@@ -48,7 +47,7 @@ export const emailLogin = async (value: {
     userStore.name = ''
     userStore.email = ''
     userStore.error = error.message
-    userStore.authenticated = false
+    userStore.confirmed = false
   }
 }
 
@@ -64,31 +63,50 @@ export const emailRegister = async (value: {
       password: value.password,
     })
     if (user) {
-      userStore.email = user.email
-      // supabaseUser.name = value.username
-      userStore.error = ''
-      // return navigateTo('/verify')
+      if (user.confirmed_at) {
+        userStore.email = user.email
+        userStore.error = ''
+        userStore.confirmed = true
+      }
     }
     if (error) throw error
   } catch (error) {
     userStore.email = ''
     userStore.name = ''
     userStore.error = error.message
+    userStore.confirmed = false
   }
 }
 
 export const providerLogin = async (
   provider: 'github' | 'google' | 'apple' | 'discord',
 ) => {
-  // const supabaseUser = useSupabaseUserStore()
+  const userStore = useSupabaseUserStore()
   const client = useSupabaseClient()
-  // const user = useSupabaseUser()
 
-  const { error } = await client.auth.signIn({ provider })
-  //   supabaseUser.email = user.value.email
-  //   supabaseUser.error = ''
-  if (error) {
-    return alert('Something went wrong !')
+  try {
+    const { user, error } = await client.auth.signIn({ provider })
+    if (user) {
+      const { data } = await client
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .single()
+
+      userStore.name = data.username
+      userStore.email = user.email
+      userStore.error = ''
+
+      if (user.role === 'authenticated') {
+        userStore.confirmed = true
+      }
+    }
+    if (error) throw error
+  } catch (error) {
+    userStore.email = ''
+    userStore.name = ''
+    userStore.error = error.message
+    userStore.confirmed = false
   }
 }
 
@@ -98,7 +116,7 @@ export const logout = async () => {
 
   userStore.email = ''
   userStore.name = ''
-  userStore.authenticated = false
+  userStore.confirmed = false
   userStore.error = ''
 
   await client.auth.signOut()

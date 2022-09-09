@@ -7,7 +7,7 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       // all these properties will have their type inferred automatically
       email: '',
       name: '',
-      authenticated: false,
+      confirmed: false,
       error: '',
       authModalOpen: false,
     }
@@ -16,7 +16,7 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
   getters: {
     getEmail: (state) => state.email,
     getName: (state) => state.name,
-    getAuthenticated: (state) => state.authenticated,
+    getConfirmed: (state) => state.confirmed,
     getError: (state) => state.error,
     getAuthModal: (state) => state.authModalOpen,
   },
@@ -28,13 +28,18 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
     authModalOn() {
       this.authModalOpen = true
     },
-
     reset() {
       this.email = ''
       this.name = ''
-      this.authenticated = false
+      this.confirmed = false
       this.error = ''
       this.authModalOpen = false
+    },
+    setStore(email: string, name: string, auth: boolean, error: string) {
+      this.email = email
+      this.name = name
+      this.confirmed = auth
+      this.error = error
     },
   },
 
