@@ -34,7 +34,7 @@
       if (error) throw error
       alert('Check your email for the login link!')
     } catch (error) {
-      alert(error.error_description || error.message)
+      alert('alth.vue catch', error.error_description || error.message)
     } finally {
       loading.value = false
     }

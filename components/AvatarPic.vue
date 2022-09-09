@@ -71,7 +71,7 @@
       emit('update:path', filePath)
       emit('upload')
     } catch (error) {
-      alert(error.message)
+      alert('avatarPic.vue catch', error.message)
     } finally {
       uploading.value = false
     }

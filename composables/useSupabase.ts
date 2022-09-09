@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type { User } from '@supabase/gotrue-js'
 import { useSupabaseUserStore } from '~~/stores/userSupaStore'
 
@@ -21,7 +20,7 @@ export const emailLogin = async (value: {
   email: string
   password: string
 }) => {
-  const supabaseUser = useSupabaseUserStore()
+  const userStore = useSupabaseUserStore()
   const client = useSupabaseClient()
 
   try {
@@ -36,20 +35,46 @@ export const emailLogin = async (value: {
         .eq('id', user.id)
         .single()
 
-      supabaseUser.name = data.username
-      supabaseUser.email = user.email
-      supabaseUser.error = ''
+      userStore.name = data.username
+      userStore.email = user.email
+      userStore.error = ''
 
       if (user.role === 'authenticated') {
-        supabaseUser.authenticated = true
+        userStore.authenticated = true
       }
     }
     if (error) throw error
   } catch (error) {
-    supabaseUser.name = ''
-    supabaseUser.email = ''
-    supabaseUser.error = error.message
-    supabaseUser.authenticated = false
+    userStore.name = ''
+    userStore.email = ''
+    userStore.error = error.message
+    userStore.authenticated = false
+  }
+}
+
+export const emailRegister = async (value: {
+  email: string
+  password: string
+  username: string
+}) => {
+  const userStore = useSupabaseUserStore()
+  const client = useSupabaseClient()
+  try {
+    const { user, error } = await client.auth.signUp({
+      email: value.email,
+      password: value.password,
+    })
+    if (user) {
+      // supabaseUser.email = user.email
+      // supabaseUser.name = value.username
+      // supabaseUser.error = ''
+      return navigateTo('/verify')
+    }
+    if (error) throw error
+  } catch (error) {
+    userStore.email = ''
+    userStore.name = ''
+    userStore.error = error.message
   }
 }
 
@@ -58,18 +83,24 @@ export const providerLogin = async (
 ) => {
   // const supabaseUser = useSupabaseUserStore()
   const client = useSupabaseClient()
-  const user = useSupabaseUser()
+  // const user = useSupabaseUser()
 
   const { error } = await client.auth.signIn({ provider })
   //   supabaseUser.email = user.value.email
-  console.log(
-    `🚀 => file: useSupabase.ts => line 64 => user.value.email`,
-    user.value.email,
-  )
-  console.log(`🚀 => file: useSupabase.ts => line 64 => user.value`, user.value)
-  console.log(`🚀 => file: useSupabase.ts => line 64 => user`, user)
   //   supabaseUser.error = ''
   if (error) {
     return alert('Something went wrong !')
   }
+}
+
+export const logout = async () => {
+  const client = useSupabaseClient()
+  const userStore = useSupabaseUserStore()
+
+  userStore.email = ''
+  userStore.name = ''
+  userStore.authenticated = false
+  userStore.error = ''
+
+  await client.auth.signOut()
 }

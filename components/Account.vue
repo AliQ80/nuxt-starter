@@ -74,7 +74,7 @@
       })
       if (error) throw error
     } catch (error) {
-      alert(error.message)
+      alert('account.vue updateProfile() catch', error.message)
     } finally {
       loading.value = false
     }
@@ -87,7 +87,7 @@
       let { error } = await supabase.auth.signOut()
       if (error) throw error
     } catch (error) {
-      alert(error.message)
+      alert('account.vue signOut() catch', error.message)
     } finally {
       loading.value = false
     }

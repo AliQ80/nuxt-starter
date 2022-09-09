@@ -7,8 +7,8 @@
   const emit = defineEmits(['loginEvent'])
 
   const client = useSupabaseClient()
-  const supabaseUser = useSupabaseUserStore()
-  const errorCode = ref('')
+  const userStore = useSupabaseUserStore()
+  // const errorCode = ref('')
   const isLoading = ref(false)
 
   // --- auto animate form ---
@@ -40,27 +40,29 @@
   // --- Supabase Auth ---
 
   const checkLoginStatus = () => {
-    if (supabaseUser.email && supabaseUser.authenticated) {
+    if (userStore.email && userStore.authenticated) {
+      reset('login')
       emit('loginEvent', 'Login', 'success')
-      reset('login')
       return navigateTo('/')
     }
 
-    if (supabaseUser.email && !supabaseUser.authenticated) {
-      emit('loginEvent', 'Login', 'Check your email to verify your account')
-      reset('login')
-      return navigateTo('/')
+    if (!userStore.authenticated) {
+      emit('loginEvent', 'Login', userStore.getError)
+      return navigateTo('/verify')
     }
 
-    if (supabaseUser.error !== '') {
-      errorCode.value = supabaseUser.getError
-      reset('login')
-      emit('loginEvent', 'Login', errorCode.value)
+    if (userStore.error !== '') {
+      // errorCode.value = userStore.getError
+      emit('loginEvent', 'Login', userStore.getError)
     }
   }
 
   const handleLogin = async (value: { email: string; password: string }) => {
+    isLoading.value = true
     await emailLogin(value)
+    userStore.authModalOff()
+    reset('login')
+    isLoading.value = false
     checkLoginStatus()
   }
 </script>
@@ -143,7 +145,7 @@
         <FormKit
           type="submit"
           label="Log in"
-          input-class="$reset btn btn-info btn-block mt-44"
+          input-class="$reset btn btn-info btn-block mt-24"
           @submit.prevent="handleLogin" />
       </div>
     </FormKit>
@@ -157,7 +159,7 @@
     </div>
     <div class="h-12">
       <div
-        v-if="supabaseUser.email"
+        v-if="userStore.email"
         class="mx-auto grid w-96 grid-cols-1 justify-items-center">
         <h2 class="text-2xl font-semibold text-emerald-400">
           Login successful!
@@ -165,10 +167,10 @@
         <progress class="progress progress-success mt-4 w-56" />
       </div>
       <div
-        v-if="supabaseUser.error"
+        v-if="userStore.error"
         class="mx-auto grid w-96 grid-cols-1 justify-items-center">
         <h2 class="text-2xl font-semibold text-rose-600">Login Failed!</h2>
-        <h2 class="font-medium">Error: {{ errorCode }}</h2>
+        <h2 class="font-medium">Error: {{ userStore.getError }}</h2>
       </div>
     </div>
   </div>

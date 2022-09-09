@@ -3,7 +3,7 @@
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userSupaStore'
 
-  const supabaseUser = useSupabaseUserStore()
+  const userStore = useSupabaseUserStore()
   const client = useSupabaseClient()
 
   // --- auto animate form ---
@@ -23,20 +23,25 @@
     // message: 'text-xs text-red-500 font-light'
   })
 
-  const errorCode = ref('')
+  const isLoading = ref(false)
   const emit = defineEmits(['registerEvent'])
 
   const checkLoginStatus = () => {
-    if (supabaseUser.email) {
+    if (userStore.email && userStore.authenticated) {
       emit('registerEvent', 'Registration', 'success')
       reset('registration')
       return navigateTo('/')
     }
 
-    if (supabaseUser.error !== '') {
-      errorCode.value = supabaseUser.getError
+    if (!userStore.authenticated) {
+      emit('registerEvent', 'Login', 'Check your email to verify your account')
+      reset('login')
+      return navigateTo('/verify')
+    }
+
+    if (userStore.error !== '') {
       reset('registration')
-      emit('registerEvent', 'Registration', errorCode.value)
+      emit('registerEvent', 'Registration', userStore.getError)
     }
   }
 
@@ -52,8 +57,6 @@
 
   // --- Supabase Auth ---
 
-  const isLoading = ref(false)
-
   const handleSignup = async (value: {
     email: string
     password: string
@@ -66,38 +69,19 @@
         password: value.password,
       })
       if (user) {
-        supabaseUser.email = user.email
-        supabaseUser.name = value.username
-        supabaseUser.error = ''
-        updateProfile(value.username)
+        userStore.email = user.email
+        userStore.name = value.username
+        userStore.error = ''
         checkLoginStatus()
       }
       if (error) throw error
     } catch (error) {
-      supabaseUser.email = ''
-      supabaseUser.name = ''
-      supabaseUser.error = error.message
+      userStore.email = ''
+      userStore.name = ''
+      userStore.error = error.message
       checkLoginStatus()
     } finally {
       isLoading.value = false
-    }
-  }
-
-  async function updateProfile(userName: string) {
-    try {
-      const user = useUser()
-      const updates = {
-        id: user.value.id,
-        username: userName,
-        updated_at: new Date(),
-      }
-      // eslint-disable-next-line prefer-const
-      let { error } = await client.from('profiles').upsert(updates, {
-        returning: 'minimal', // Don't return the value after inserting
-      })
-      if (error) throw error
-    } catch (error) {
-      alert(error.message)
     }
   }
 </script>
@@ -155,13 +139,13 @@
         Register Now For Free!
       </h1>
 
-      <FormKit
+      <!-- <FormKit
         type="text"
         prefix-icon="avatarMan"
         name="username"
         label="Your name"
         validation="required"
-        :classes="formStyles" />
+        :classes="formStyles" /> -->
       <FormKit
         type="email"
         prefix-icon="email"
@@ -208,7 +192,7 @@
     </div>
     <div class="h-12">
       <div
-        v-if="supabaseUser.email"
+        v-if="userStore.getEmail"
         class="mx-auto grid w-96 grid-cols-1 justify-items-center">
         <h2 class="text-2xl font-semibold text-emerald-400">
           Registeration successful!
@@ -216,13 +200,13 @@
         <progress class="progress progress-success mt-4 w-56" />
       </div>
       <div
-        v-if="supabaseUser.error"
+        v-if="userStore.getError"
         class="mx-auto grid w-96 grid-cols-1 justify-items-center">
         <h2 class="text-2xl font-semibold text-rose-600">
           Registeration Failed!
         </h2>
         <h2 class="font-medium">
-          {{ errorCode }}
+          {{ userStore.getError }}
         </h2>
       </div>
     </div>
