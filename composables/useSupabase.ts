@@ -55,7 +55,6 @@ export const emailLogin = async (value: {
 export const emailRegister = async (value: {
   email: string
   password: string
-  username: string
 }) => {
   const userStore = useSupabaseUserStore()
   const client = useSupabaseClient()
@@ -68,7 +67,7 @@ export const emailRegister = async (value: {
       // supabaseUser.email = user.email
       // supabaseUser.name = value.username
       // supabaseUser.error = ''
-      return navigateTo('/verify')
+      // return navigateTo('/verify')
     }
     if (error) throw error
   } catch (error) {

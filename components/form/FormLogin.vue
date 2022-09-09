@@ -46,14 +46,14 @@
       return navigateTo('/')
     }
 
-    if (!userStore.authenticated) {
-      emit('loginEvent', 'Login', userStore.getError)
-      return navigateTo('/verify')
-    }
-
     if (userStore.error !== '') {
-      // errorCode.value = userStore.getError
-      emit('loginEvent', 'Login', userStore.getError)
+      if (userStore.error === 'Email not confirmed') {
+        emit('loginEvent', 'Login', userStore.getError)
+        return navigateTo('/verify')
+      } else {
+        emit('loginEvent', 'Login', userStore.getError)
+        return navigateTo('/')
+      }
     }
   }
 

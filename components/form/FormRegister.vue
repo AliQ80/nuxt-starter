@@ -2,6 +2,7 @@
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { emailRegister } from '@/composables/useSupabase'
 
   const userStore = useSupabaseUserStore()
   const client = useSupabaseClient()
@@ -33,11 +34,11 @@
       return navigateTo('/')
     }
 
-    if (!userStore.authenticated) {
-      emit('registerEvent', 'Login', 'Check your email to verify your account')
-      reset('login')
-      return navigateTo('/verify')
-    }
+    // if (!userStore.authenticated) {
+    //   emit('registerEvent', 'Login', 'Check your email to verify your account')
+    //   reset('login')
+    //   return navigateTo('/verify')
+    // }
 
     if (userStore.error !== '') {
       reset('registration')
@@ -57,33 +58,41 @@
 
   // --- Supabase Auth ---
 
-  const handleSignup = async (value: {
-    email: string
-    password: string
-    username: string
-  }) => {
-    try {
-      isLoading.value = true
-      const { user, error } = await client.auth.signUp({
-        email: value.email,
-        password: value.password,
-      })
-      if (user) {
-        userStore.email = user.email
-        userStore.name = value.username
-        userStore.error = ''
-        checkLoginStatus()
-      }
-      if (error) throw error
-    } catch (error) {
-      userStore.email = ''
-      userStore.name = ''
-      userStore.error = error.message
-      checkLoginStatus()
-    } finally {
-      isLoading.value = false
-    }
+  const handleSignup = async (value: { email: string; password: string }) => {
+    isLoading.value = true
+    await emailRegister(value)
+    userStore.authModalOff()
+    reset('register')
+    isLoading.value = false
+    checkLoginStatus()
   }
+  // const handleSignup = async (value: {
+  //   email: string
+  //   password: string
+  //   username: string
+  // }) => {
+  //   try {
+  //     isLoading.value = true
+  //     const { user, error } = await client.auth.signUp({
+  //       email: value.email,
+  //       password: value.password,
+  //     })
+  //     if (user) {
+  //       userStore.email = user.email
+  //       userStore.name = value.username
+  //       userStore.error = ''
+  //       checkLoginStatus()
+  //     }
+  //     if (error) throw error
+  //   } catch (error) {
+  //     userStore.email = ''
+  //     userStore.name = ''
+  //     userStore.error = error.message
+  //     checkLoginStatus()
+  //   } finally {
+  //     isLoading.value = false
+  //   }
+  // }
 </script>
 
 <template>
