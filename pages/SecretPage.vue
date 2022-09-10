@@ -8,5 +8,7 @@
 </script>
 
 <template>
-  <div>secret page</div>
+  <div class="prose my-10 mx-auto flex justify-center">
+    <h1>secret page</h1>
+  </div>
 </template>
