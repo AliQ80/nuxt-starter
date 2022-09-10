@@ -28,16 +28,7 @@
           {{ userStore.email }}
         </p>
         <p class="mb-8 text-lg font-semibold md:text-lg">
-          then login again or click the button below.
-        </p>
-        <NuxtLink
-          rel="noopener noreferrer"
-          href="/"
-          class="btn btn-info px-8 py-3 font-semibold dark:text-gray-900">
-          resend verification email
-        </NuxtLink>
-        <p class="mt-10 mb-8 dark:text-gray-400">
-          But dont worry, you can find plenty of other things on our homepage.
+          The link is valid for 24 hours, after that you have to register again.
         </p>
 
         <NuxtLink
