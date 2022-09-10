@@ -27,7 +27,7 @@
       })
     } else {
       toast.error(`${origin} Failed: ${result}`, {
-        timeout: 5000,
+        timeout: false,
         position: POSITION.BOTTOM_CENTER,
       })
     }

@@ -46,7 +46,12 @@ export default defineNuxtConfig({
       },
     ],
   ],
-  modules: ['@vueuse/nuxt', '@nuxtjs/tailwindcss', '@formkit/nuxt'],
+  modules: [
+    '@vueuse/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@formkit/nuxt',
+    '@nuxtjs/supabase',
+  ],
   app: {
     head: {
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],

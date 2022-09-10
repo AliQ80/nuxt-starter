@@ -1,15 +1,18 @@
 <script setup lang="ts">
-  import { useFirebaseUserStore } from '~~/stores/userStore'
+  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { logout } from '~~/composables/useSupabase'
 
-  const firebaseUser = useFirebaseUserStore()
+  const userStore = useSupabaseUserStore()
 
-  const isModalRegOpen = ref(false)
-  const isModalLogOpen = ref(false)
+  const openModal = () => {
+    userStore.reset()
+    userStore.authModalOn()
+  }
 
-  const signOut = async () => {
-    isModalRegOpen.value = false
-    isModalLogOpen.value = false
-    await signOutUser()
+  const handleLogout = async () => {
+    await logout()
+    userStore.authModalOff()
+    return navigateTo('/')
   }
 </script>
 
@@ -73,19 +76,19 @@
     <div class="navbar-end">
       <!-- display username and email if logged in -->
       <transition>
-        <div v-if="firebaseUser.email">
-          {{ firebaseUser.name }}
+        <div v-if="userStore.getConfirmed">
+          {{ userStore.name }}
           <br />
-          {{ firebaseUser.email }}
+          {{ userStore.email }}
         </div>
       </transition>
 
       <!-- The button to open modal -->
-      <div v-if="!firebaseUser.email">
+      <div v-if="!userStore.getConfirmed">
         <NuxtLink
           to="#modal-start"
           class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
-          @click="isModalLogOpen = !isModalLogOpen">
+          @click="openModal">
           Start Here
         </NuxtLink>
       </div>
@@ -95,7 +98,7 @@
         <transition>
           <NuxtLink
             class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
-            @click="signOut">
+            @click="handleLogout">
             Log Out
           </NuxtLink>
         </transition>
@@ -103,16 +106,16 @@
 
       <!-- Start Modal -->
       <div
-        v-show="!firebaseUser.email"
+        v-if="userStore.getAuthModal"
         id="modal-start"
         class="modal"
-        :class="{ 'modal-open': isModalLogOpen }">
+        :class="{ 'modal-open': userStore.getAuthModal }">
         <div class="modal-box relative">
           <NuxtLink
             to="#"
             for="modal-login"
             class="btn btn-sm btn-circle absolute right-2 top-2"
-            @click="isModalLogOpen = !isModalLogOpen">
+            @click="userStore.authModalOff()">
             ✕
           </NuxtLink>
           <FormStart />
