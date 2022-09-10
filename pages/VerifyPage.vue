@@ -1,8 +1,12 @@
 <script setup lang="ts">
+  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+
   definePageMeta({
     title: 'Nuxt-starter | verify',
     alias: ['/verify'],
   })
+
+  const userStore = useSupabaseUserStore()
 </script>
 
 <template>
@@ -17,11 +21,14 @@
         <h2 class="mb-8 text-7xl font-extrabold dark:text-gray-600">
           Your Email
         </h2>
-        <p class="mb-8 text-2xl font-semibold md:text-3xl">
-          Click the link we sent to your email, then login again.
+        <p class="mb-8 text-lg font-semibold md:text-lg">
+          Click the link we sent to your email:
         </p>
-        <p class="mb-8 text-2xl font-semibold md:text-3xl">
-          Or if you lost your verification email, click the button below.
+        <p class="mb-8 text-2xl font-semibold text-lime-400 md:text-3xl">
+          {{ userStore.email }}
+        </p>
+        <p class="mb-8 text-lg font-semibold md:text-lg">
+          then login again or click the button below.
         </p>
         <NuxtLink
           rel="noopener noreferrer"

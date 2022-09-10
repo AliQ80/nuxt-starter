@@ -34,6 +34,12 @@
       return navigateTo('/')
     }
 
+    if (userStore.email && !userStore.confirmed) {
+      reset('registration')
+      emit('registerEvent', 'registration', 'success')
+      return navigateTo('/verify')
+    }
+
     if (userStore.error !== '') {
       if (userStore.error === 'Email not confirmed') {
         emit('registerEvent', 'registration', userStore.getError)

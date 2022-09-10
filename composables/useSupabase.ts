@@ -68,6 +68,12 @@ export const emailRegister = async (value: {
         userStore.error = ''
         userStore.confirmed = true
       }
+      if (user.confirmation_sent_at) {
+        userStore.email = user.email
+        userStore.error = ''
+        userStore.confirmed = false
+        // navigateTo('/verify')
+      }
     }
     if (error) throw error
   } catch (error) {
