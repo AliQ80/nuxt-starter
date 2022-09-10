@@ -58,7 +58,7 @@
 
         <!-- sun icon -->
         <svg
-          class="swap-on h-10 w-10 fill-current"
+          class="swap-on h-8 w-8 fill-current"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24">
           <path
@@ -67,7 +67,7 @@
 
         <!-- moon icon -->
         <svg
-          class="swap-off h-10 w-10 fill-current"
+          class="swap-off h-8 w-8 fill-current"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24">
           <path
@@ -97,42 +97,53 @@
     </div>
 
     <div class="navbar-end">
-      <!-- display username and email if logged in -->
-      <transition>
-        <div v-if="userStore.getConfirmed">
-          {{ userStore.name }}
-          <br />
-          {{ userStore.email }}
-        </div>
-      </transition>
-
-      <!-- The button to open modal -->
-      <div v-if="!userStore.getConfirmed">
-        <NuxtLink
-          to="#modal-start"
-          class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
-          @click="openModal">
-          Start Here
-        </NuxtLink>
-      </div>
-
-      <!-- The button to logout -->
-      <div v-else>
+      <!-- Avatar placeholder -->
+      <div v-if="userStore.getConfirmed">
         <transition>
-          <NuxtLink
-            class="btn btn-secondary btn-sm mx-2 mt-2 h-10 w-24"
-            @click="handleLogout">
-            Log Out
-          </NuxtLink>
+          <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle">
+              <div class="avatar online placeholder mx-2">
+                <div
+                  class="bg-neutral-focus text-neutral-content ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
+                  <span class="text-xl">AK</span>
+                </div>
+              </div>
+            </label>
+            <ul
+              tabindex="0"
+              class="menu menu-compact dropdown-content bg-base-200 rounded-box mt-3 w-52 p-2 shadow">
+              <li class="border-b-2 border-indigo-500">
+                <div v-if="userStore.getConfirmed">
+                  {{ userStore.name }}
+                  <br />
+                  {{ userStore.email }}
+                </div>
+              </li>
+              <li>
+                <NuxtLink to="/secret"> 🔘 Profile </NuxtLink>
+              </li>
+              <li class="border-t-2 border-indigo-500">
+                <NuxtLink
+                  class="btn btn-secondary btn-sm mx-auto my-2 h-10 w-32 text-white"
+                  @click="handleLogout">
+                  Log Out
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
         </transition>
       </div>
 
-      <!-- Avatar placeholder -->
-      <div class="avatar online placeholder mx-2">
-        <div
-          class="bg-neutral-focus text-neutral-content ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
-          <span class="text-xl">AK</span>
-        </div>
+      <!-- The button to open modal -->
+      <div v-if="!userStore.getConfirmed">
+        <transition>
+          <NuxtLink
+            to="#modal-start"
+            class="btn btn-info btn-xs mx-2 mt-2 h-10 w-24"
+            @click="openModal">
+            Start Here
+          </NuxtLink>
+        </transition>
       </div>
 
       <!-- Start Modal -->
