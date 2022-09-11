@@ -120,7 +120,10 @@
                 </div>
               </li>
               <li>
-                <NuxtLink to="/secret"> 🔘 Profile </NuxtLink>
+                <NuxtLink to="/profile"> 🔘 Profile </NuxtLink>
+              </li>
+              <li>
+                <NuxtLink to="/secret"> 🔘 Settings </NuxtLink>
               </li>
               <li class="border-t-2 border-indigo-500">
                 <NuxtLink
