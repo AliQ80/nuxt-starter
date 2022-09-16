@@ -31,10 +31,11 @@ export const emailLogin = async (value: {
     if (user) {
       const { data } = await client
         .from('profiles')
-        .select('username')
+        .select('username,id')
         .eq('id', user.id)
         .single()
 
+      userStore.uid = data.id
       userStore.name = data.username
       userStore.email = user.email
       userStore.error = ''

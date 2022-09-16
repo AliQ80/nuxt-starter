@@ -1,10 +1,14 @@
 <script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
+  import { reset } from '@formkit/core'
+  // import { fileItem } from '@formkit/inputs';
   import { POSITION, useToast } from 'vue-toastification'
+  //   import { uploadAvatar, downloadImage } from '@/components/AvatarPic.vue'
   //   import { $ref } from 'vue/macros'
-  //   import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
 
-  //   const userStore = useSupabaseUserStore()
+  // const emit = defineEmits(['update:path', 'upload'])
+  const userStore = useSupabaseUserStore()
   const client = useSupabaseClient()
   const isLoading = ref(false)
   const toast = useToast()
@@ -15,6 +19,8 @@
   const initials = ref('')
   const description = ref('')
   const avatarPath = ref('')
+
+  const files = ref()
 
   // --- auto animate form ---
   const pform = ref()
@@ -75,7 +81,7 @@
         first_name: firstName.value,
         last_name: lastName.value,
         description: description.value,
-        // avatar_url: avatarPath.value,
+        avatar_url: avatarPath.value,
         updated_at: new Date(),
       }
       const { error } = await client.from('profiles').upsert(updates, {
@@ -83,12 +89,47 @@
       })
       if (error) throw error
     } catch (error) {
-      toast.warning(error.message, {
+      toast.error(error.message, {
+        timeout: 7000,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const uploadAvatar = async (data) => {
+    files.value = data.avatar
+
+    try {
+      isLoading.value = true
+      if (!files.value || files.value.length === 0) {
+        throw new Error('You must select an image to upload.')
+      }
+      const file = files.value[0]
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${userStore.uid}.${fileExt}`
+      const filePath = `${fileName}`
+      const { data, error: uploadError } = await client.storage
+        .from('avatars')
+        .upload(filePath, file.file)
+      if (data) {
+        console.log(data)
+        toast.success('Upload Successful', {
+          timeout: 7000,
+          position: POSITION.BOTTOM_CENTER,
+        })
+      }
+      if (uploadError) throw uploadError
+    } catch (error) {
+      console.log('error.message: ', error.message)
+      toast.error(error.message, {
         timeout: false,
         position: POSITION.BOTTOM_CENTER,
       })
     } finally {
       isLoading.value = false
+      reset('avatar')
     }
   }
 </script>
@@ -130,7 +171,7 @@
         <progress v-if="isLoading" class="progress progress-info mt-3 w-56" />
       </div>
       <div>
-        <div ref="pform" class="flex justify-center">
+        <div ref="pform" class="mb-10 flex justify-center">
           <FormKit
             id="Profile"
             type="form"
@@ -138,6 +179,13 @@
             submit-label="Update Profile"
             :actions="false"
             @submit="handleProfileUpdate">
+            <FormKit
+              v-model="username"
+              type="text"
+              name="username"
+              label="Username"
+              validation="required"
+              :classes="formStyles" />
             <div class="flex">
               <div class="mr-2">
                 <FormKit
@@ -164,13 +212,6 @@
               name="description"
               label="description"
               :classes="formStyles" />
-            <FormKit
-              type="file"
-              label="Upload your avatar photo"
-              accept=".jpg,.jpeg,.png"
-              help="JPEG and PNG accepted."
-              inner-class="$reset block border border-grey-light w-full bg-white rounded text-gray-500"
-              help-class="$reset text-xs text-gray-400" />
 
             <!-- submit button -->
             <div class="mt-5">
@@ -180,6 +221,29 @@
                 input-class="$reset btn btn-info btn-block mt-4"
                 @submit.prevent="handleProfileUpdate" />
             </div>
+          </FormKit>
+        </div>
+
+        <!-- Avatar update -->
+        <div class="mb-20">
+          <FormKit
+            id="avatar"
+            type="form"
+            form-class="flex lg:w-96"
+            :actions="false"
+            @submit="uploadAvatar">
+            <FormKit
+              type="file"
+              label="Upload your avatar photo"
+              name="avatar"
+              accept=".jpg,.jpeg,.png"
+              help="JPEG and PNG accepted."
+              inner-class="block border border-grey-light w-52 bg-white rounded text-gray-500"
+              help-class="$reset text-xs text-gray-400" />
+            <FormKit
+              type="submit"
+              label="Update Avatar"
+              input-class="$reset btn btn-info btn-block mt-5 ml-4" />
           </FormKit>
         </div>
       </div>
