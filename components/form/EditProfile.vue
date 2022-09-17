@@ -19,7 +19,7 @@
   const initials = ref('')
   const description = ref('')
   const avatarPath = ref('')
-
+  const avatarUrl = ref('')
   const files = ref()
 
   // --- auto animate form ---
@@ -69,7 +69,25 @@
     }
   }
 
+  const downloadImage = async () => {
+    try {
+      const { data, error } = await client.storage
+        .from('avatars')
+        .download(avatarPath.value)
+      if (error) throw error
+      avatarUrl.value = URL.createObjectURL(data)
+    } catch (error) {
+      toast.error(error.message, {
+        timeout: false,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    }
+  }
+
   getData()
+  watch(avatarPath, () => {
+    if (avatarPath.value) downloadImage()
+  })
 
   const handleProfileUpdate = async () => {
     try {
@@ -114,7 +132,8 @@
         .from('avatars')
         .upload(filePath, file.file)
       if (data) {
-        console.log(data)
+        avatarPath.value = filePath
+        handleProfileUpdate()
         toast.success('Upload Successful', {
           timeout: 7000,
           position: POSITION.BOTTOM_CENTER,
@@ -122,7 +141,6 @@
       }
       if (uploadError) throw uploadError
     } catch (error) {
-      console.log('error.message: ', error.message)
       toast.error(error.message, {
         timeout: false,
         position: POSITION.BOTTOM_CENTER,
@@ -143,13 +161,13 @@
             <div>
               <div class="avatar online placeholder mb-4">
                 <div
-                  v-if="!avatarPath"
+                  v-if="!avatarUrl"
                   class="bg-neutral-focus text-neutral-content ring-primary ring-offset-base-100 mx-auto w-28 rounded-full ring ring-offset-2">
                   <span class="text-5xl font-extrabold">{{ initials }}</span>
                 </div>
-                <div v-if="avatarPath">
+                <div v-else>
                   <img
-                    src="avatarPath"
+                    :src="avatarUrl"
                     alt="avatar"
                     class="mx-auto aspect-square h-32 w-32 rounded-full dark:bg-gray-500" />
                 </div>
@@ -171,7 +189,7 @@
         <progress v-if="isLoading" class="progress progress-info mt-3 w-56" />
       </div>
       <div>
-        <div ref="pform" class="mb-10 flex justify-center">
+        <div ref="pform" class="mb-5 flex justify-center">
           <FormKit
             id="Profile"
             type="form"
@@ -225,30 +243,44 @@
         </div>
 
         <!-- Avatar update -->
-        <div class="mb-20">
-          <FormKit
-            id="avatar"
-            type="form"
-            form-class="flex lg:w-96"
-            :actions="false"
-            @submit="uploadAvatar">
+        <ClientOnly>
+          <!-- <transition> -->
+          <div class="mb-20">
             <FormKit
-              type="file"
-              label="Upload your avatar photo"
-              name="avatar"
-              accept=".jpg,.jpeg,.png"
-              help="JPEG and PNG accepted."
-              inner-class="block border border-grey-light w-52 bg-white rounded text-gray-500"
-              help-class="$reset text-xs text-gray-400" />
-            <FormKit
-              type="submit"
-              label="Update Avatar"
-              input-class="$reset btn btn-info btn-block mt-5 ml-4" />
-          </FormKit>
-        </div>
+              id="avatar"
+              type="form"
+              form-class="flex lg:w-96"
+              :actions="false"
+              @submit="uploadAvatar">
+              <FormKit
+                type="file"
+                label="Upload your avatar photo"
+                name="avatar"
+                accept=".jpg,.jpeg,.png"
+                help="JPEG and PNG accepted."
+                inner-class="block border border-grey-light w-52 bg-white rounded text-gray-500"
+                help-class="$reset text-xs text-gray-400" />
+              <FormKit
+                type="submit"
+                label="Update Avatar"
+                input-class="$reset btn btn-info btn-block mt-5 ml-4" />
+            </FormKit>
+          </div>
+          <!-- </transition> -->
+        </ClientOnly>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+  }
+</style>
