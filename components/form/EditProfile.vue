@@ -1,7 +1,7 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
   import { reset } from '@formkit/core'
-  // import { fileItem } from '@formkit/inputs';
   import { POSITION, useToast } from 'vue-toastification'
   //   import { uploadAvatar, downloadImage } from '@/components/AvatarPic.vue'
   //   import { $ref } from 'vue/macros'
@@ -20,6 +20,7 @@
   const description = ref('')
   const avatarPath = ref('')
   const avatarUrl = ref('')
+  const oldAvatar = ref('')
   const files = ref()
 
   // --- auto animate form ---
@@ -60,13 +61,41 @@
       }
       if (error) throw error
     } catch (error) {
-      toast.warning(error.message, {
+      toast.error(error.message, {
         timeout: false,
         position: POSITION.BOTTOM_CENTER,
       })
     } finally {
       isLoading.value = false
     }
+  }
+
+  const uploadNewImage = async (
+    filePath: string,
+    avatarImg:
+      | string
+      | ArrayBuffer
+      | ArrayBufferView
+      | Blob
+      | Buffer
+      | File
+      | FormData
+      | NodeJS.ReadableStream
+      | ReadableStream<Uint8Array>
+      | URLSearchParams,
+  ) => {
+    const { data, error: uploadError } = await client.storage
+      .from('avatars')
+      .upload(filePath, avatarImg)
+    if (data) {
+      avatarPath.value = filePath
+      handleProfileUpdate()
+      toast.success('Avatar was Successfuly set', {
+        timeout: 7000,
+        position: POSITION.BOTTOM_CENTER,
+      })
+    }
+    if (uploadError) throw uploadError
   }
 
   const downloadImage = async () => {
@@ -77,17 +106,43 @@
       if (error) throw error
       avatarUrl.value = URL.createObjectURL(data)
     } catch (error) {
-      toast.error(error.message, {
-        timeout: false,
-        position: POSITION.BOTTOM_CENTER,
-      })
+      console.log(error.message)
+      if (error.message === 'The resource was not found') {
+        toast.info('You have not set a profile avatar', {
+          timeout: 7000,
+          position: POSITION.BOTTOM_CENTER,
+        })
+      } else {
+        toast.error(error.message, {
+          timeout: false,
+          position: POSITION.BOTTOM_CENTER,
+        })
+      }
     }
   }
 
-  getData()
-  watch(avatarPath, () => {
-    if (avatarPath.value) downloadImage()
-  })
+  const updateImage = async (
+    filePath: string,
+    avatarImg:
+      | string
+      | ArrayBuffer
+      | ArrayBufferView
+      | Blob
+      | Buffer
+      | File
+      | FormData
+      | NodeJS.ReadableStream
+      | ReadableStream<Uint8Array>
+      | URLSearchParams,
+  ) => {
+    const { data, error: deleteError } = await client.storage
+      .from('avatars')
+      .remove([oldAvatar.value])
+    if (data) {
+      uploadNewImage(filePath, avatarImg)
+    }
+    if (deleteError) throw deleteError
+  }
 
   const handleProfileUpdate = async () => {
     try {
@@ -116,50 +171,59 @@
     }
   }
 
-  const uploadAvatar = async (data) => {
+  const uploadAvatar = async (data: { avatar }) => {
+    isLoading.value = true
     files.value = data.avatar
+    const user = useSupabaseUser()
 
     try {
-      isLoading.value = true
       if (!files.value || files.value.length === 0) {
         throw new Error('You must select an image to upload.')
       }
-      const file = files.value[0]
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${userStore.uid}.${fileExt}`
-      const filePath = `${fileName}`
-      const { data, error: uploadError } = await client.storage
-        .from('avatars')
-        .upload(filePath, file.file)
-      if (data) {
-        avatarPath.value = filePath
-        handleProfileUpdate()
-        toast.success('Upload Successful', {
-          timeout: 7000,
-          position: POSITION.BOTTOM_CENTER,
-        })
+      const avatarImg = files.value[0]
+      const fileExt = avatarImg.name.split('.').pop()
+      const fileName = `avatar${Math.floor(Math.random() * 10000)}.${fileExt}`
+      const filePath = `${userStore.uid}/${fileName}`
+      const { data, error } = await client
+        .from('profiles')
+        .select(`avatar_url`)
+        .eq('id', user.value.id)
+        .single()
+      oldAvatar.value = data.avatar_url
+      if (oldAvatar.value !== 'NULL') {
+        // --- update photo ---
+        console.log('--- update photo ---')
+        updateImage(filePath, avatarImg.file)
+      } else {
+        // --- upload new photo ---
+        console.log('--- upload new photo ---')
+        uploadNewImage(filePath, avatarImg.file)
       }
-      if (uploadError) throw uploadError
+      if (error) throw error
     } catch (error) {
       toast.error(error.message, {
         timeout: false,
         position: POSITION.BOTTOM_CENTER,
       })
     } finally {
-      isLoading.value = false
       reset('avatar')
     }
   }
+
+  getData()
+  watch(avatarPath, () => {
+    if (avatarPath.value) downloadImage()
+  })
 </script>
 
 <template>
   <div>
-    <div class="flex justify-center">
-      <div class="mr-10 mb-10">
+    <div class="mx-5 lg:flex lg:justify-center">
+      <div class="mx-10 mb-10">
         <ProfileCard>
           <template #avatar>
-            <div>
-              <div class="avatar online placeholder mb-4">
+            <div class="flex justify-center">
+              <div class="avatar online placeholder mb-4 w-32">
                 <div
                   v-if="!avatarUrl"
                   class="bg-neutral-focus text-neutral-content ring-primary ring-offset-base-100 mx-auto w-28 rounded-full ring ring-offset-2">
@@ -169,7 +233,7 @@
                   <img
                     :src="avatarUrl"
                     alt="avatar"
-                    class="mx-auto aspect-square h-32 w-32 rounded-full dark:bg-gray-500" />
+                    class="mx-auto aspect-square rounded-full dark:bg-gray-500" />
                 </div>
               </div>
             </div>
@@ -204,8 +268,8 @@
               label="Username"
               validation="required"
               :classes="formStyles" />
-            <div class="flex">
-              <div class="mr-2">
+            <div class="flex lg:w-96">
+              <div class="mr-4 sm:w-32 lg:w-48">
                 <FormKit
                   v-model="firstName"
                   type="text"
@@ -214,7 +278,7 @@
                   validation="required"
                   :classes="formStyles" />
               </div>
-              <div class="ml-2">
+              <div class="sm:w-32 lg:w-48">
                 <FormKit
                   v-model="lastName"
                   type="text"
@@ -245,7 +309,7 @@
         <!-- Avatar update -->
         <ClientOnly>
           <!-- <transition> -->
-          <div class="mb-20">
+          <div class="mr-5 mb-20 lg:ml-5">
             <FormKit
               id="avatar"
               type="form"
