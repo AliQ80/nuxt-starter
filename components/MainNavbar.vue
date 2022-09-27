@@ -100,9 +100,9 @@
       <!-- Avatar placeholder -->
       <div v-if="userStore.getConfirmed">
         <transition>
-          <div class="dropdown dropdown-end">
+          <div class="dropdown dropdown-end mx-4">
             <label tabindex="0" class="btn btn-ghost btn-circle">
-              <div class="avatar online placeholder mx-2">
+              <div class="avatar online placeholder">
                 <div
                   class="bg-neutral-focus text-neutral-content ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
                   <span class="text-xl">AK</span>
