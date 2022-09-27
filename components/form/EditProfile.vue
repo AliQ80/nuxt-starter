@@ -3,8 +3,6 @@
   import autoAnimate from '@formkit/auto-animate'
   import { reset } from '@formkit/core'
   import { POSITION, useToast } from 'vue-toastification'
-  //   import { uploadAvatar, downloadImage } from '@/components/AvatarPic.vue'
-  //   import { $ref } from 'vue/macros'
   import { useSupabaseUserStore } from '~~/stores/userSupaStore'
 
   // const emit = defineEmits(['update:path', 'upload'])
@@ -20,7 +18,7 @@
   const description = ref('')
   const avatarPath = ref('')
   const avatarUrl = ref('')
-  const oldAvatar = ref('')
+  const currentAvatar = ref('')
   const files = ref()
 
   // --- auto animate form ---
@@ -89,7 +87,7 @@
       .upload(filePath, avatarImg)
     if (data) {
       avatarPath.value = filePath
-      handleProfileUpdate()
+      updateProfile()
       toast.success('Avatar was Successfuly set', {
         timeout: 7000,
         position: POSITION.BOTTOM_CENTER,
@@ -137,14 +135,14 @@
   ) => {
     const { data, error: deleteError } = await client.storage
       .from('avatars')
-      .remove([oldAvatar.value])
+      .remove([currentAvatar.value])
     if (data) {
       uploadNewImage(filePath, avatarImg)
     }
     if (deleteError) throw deleteError
   }
 
-  const handleProfileUpdate = async () => {
+  const updateProfile = async () => {
     try {
       isLoading.value = true
       const user = useSupabaseUser()
@@ -189,8 +187,8 @@
         .select(`avatar_url`)
         .eq('id', user.value.id)
         .single()
-      oldAvatar.value = data.avatar_url
-      if (oldAvatar.value !== 'NULL') {
+      currentAvatar.value = data.avatar_url
+      if (currentAvatar.value !== 'NULL') {
         // --- update photo ---
         console.log('--- update photo ---')
         updateImage(filePath, avatarImg.file)
@@ -260,7 +258,7 @@
             form-class="lg:w-96"
             submit-label="Update Profile"
             :actions="false"
-            @submit="handleProfileUpdate">
+            @submit="updateProfile">
             <FormKit
               v-model="username"
               type="text"
@@ -301,7 +299,7 @@
                 type="submit"
                 label="Update Profile"
                 input-class="$reset btn btn-info btn-block mt-4"
-                @submit.prevent="handleProfileUpdate" />
+                @submit.prevent="updateProfile" />
             </div>
           </FormKit>
         </div>
