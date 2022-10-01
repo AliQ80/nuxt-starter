@@ -10,6 +10,7 @@
   const client = useSupabaseClient()
   const isLoading = ref(false)
   const toast = useToast()
+  const editProfile = ref(false)
 
   const username = ref('')
   const firstName = ref('')
@@ -248,9 +249,24 @@
             <div class="font-sans font-extralight">{{ description }}</div>
           </template>
         </ProfileCard>
+        <div class="my-2 flex justify-center">
+          <button
+            v-show="!editProfile"
+            class="btn btn-info"
+            @click="editProfile = true">
+            Edit Profile
+          </button>
+          <button
+            v-show="editProfile"
+            class="btn btn-info"
+            @click="editProfile = false">
+            Finish Editing Profile
+          </button>
+        </div>
         <progress v-if="isLoading" class="progress progress-info mt-3 w-56" />
       </div>
-      <div>
+
+      <div v-show="editProfile">
         <div ref="pform" class="mb-5 flex justify-center">
           <FormKit
             id="Profile"
