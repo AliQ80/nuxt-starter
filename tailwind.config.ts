@@ -10,7 +10,11 @@ module.exports = {
     'app.{js,ts,vue}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        lobster: "'Lobster', cursive",
+      },
+    },
   },
   plugins: [require('daisyui'), require('@tailwindcss/typography')],
 }
