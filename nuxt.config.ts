@@ -45,6 +45,17 @@ export default defineNuxtConfig({
         ],
       },
     ],
+    [
+      '@nuxtjs/google-fonts',
+      {
+        googleFonts: {
+          families: {
+            Roboto: true,
+            Lobster: true,
+          },
+        },
+      },
+    ],
   ],
   modules: [
     '@vueuse/nuxt',

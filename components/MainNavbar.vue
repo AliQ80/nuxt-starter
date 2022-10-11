@@ -48,8 +48,8 @@
           </li>
         </ul>
       </div>
-      <NuxtLink to="/" class="btn btn-ghost text-xl normal-case">
-        Nuxt 3 starter
+      <NuxtLink to="/" class="btn btn-ghost font-lobster text-xl normal-case">
+        Nuxt3 Starter
       </NuxtLink>
 
       <label class="swap swap-rotate mx-2">
