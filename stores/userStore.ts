@@ -112,6 +112,17 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       this.confirmed = auth
       this.error = error
     },
+
+    async logout() {
+      const client = useSupabaseClient()
+
+      this.email = ''
+      this.name = ''
+      this.confirmed = false
+      this.error = ''
+
+      await client.auth.signOut()
+    },
   },
 
   persist: true,

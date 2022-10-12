@@ -117,14 +117,14 @@ export const providerLogin = async (
   }
 }
 
-export const logout = async () => {
-  const client = useSupabaseClient()
-  const userStore = useSupabaseUserStore()
+// export const logout = async () => {
+//   const client = useSupabaseClient()
+//   const userStore = useSupabaseUserStore()
 
-  userStore.email = ''
-  userStore.name = ''
-  userStore.confirmed = false
-  userStore.error = ''
+//   userStore.email = ''
+//   userStore.name = ''
+//   userStore.confirmed = false
+//   userStore.error = ''
 
-  await client.auth.signOut()
-}
+//   await client.auth.signOut()
+// }

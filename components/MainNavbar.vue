@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { useSupabaseUserStore } from '~~/stores/userStore'
-  import { logout } from '~~/composables/useSupabase'
 
   const userStore = useSupabaseUserStore()
 
@@ -10,7 +9,8 @@
   }
 
   const handleLogout = async () => {
-    await logout()
+    // await logout()
+    await userStore.logout()
     userStore.authModalOff()
     return navigateTo('/')
   }
