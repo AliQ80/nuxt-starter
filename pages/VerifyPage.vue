@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { useSupabaseUserStore } from '~~/stores/userStore'
 
   definePageMeta({
     title: 'Nuxt-starter | verify',

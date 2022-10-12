@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useStore } from '../stores/counter'
-  import { useFirebaseUserStore } from '../stores/userStore'
+  import { useSupabaseUserStore } from '../stores/userStore'
 
   const counterStore = useStore()
-  const userStore = useFirebaseUserStore()
+  const userStore = useSupabaseUserStore()
 
   const username = ref()
   const userEmail = ref()
