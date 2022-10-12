@@ -71,6 +71,36 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       }
     },
 
+    async providerLogin(provider: 'github' | 'google' | 'apple' | 'discord') {
+      const userStore = useSupabaseUserStore()
+      const client = useSupabaseClient()
+
+      try {
+        const { user, error } = await client.auth.signIn({ provider })
+        if (user) {
+          const { data } = await client
+            .from('profiles')
+            .select('username')
+            .eq('id', user.id)
+            .single()
+
+          userStore.name = data.username
+          userStore.email = user.email
+          userStore.error = ''
+
+          if (user.role === 'authenticated') {
+            userStore.confirmed = true
+          }
+        }
+        if (error) throw error
+      } catch (error) {
+        userStore.email = ''
+        userStore.name = ''
+        userStore.error = error.message
+        userStore.confirmed = false
+      }
+    },
+
     async emailRegister(value: { email: string; password: string }) {
       const client = useSupabaseClient()
       try {

@@ -3,7 +3,7 @@
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userStore'
   // import { emailRegister, providerLogin } from '@/composables/useSupabase'
-  import { providerLogin } from '@/composables/useSupabase'
+  // import { providerLogin } from '@/composables/useSupabase'
 
   const userStore = useSupabaseUserStore()
   // const client = useSupabaseClient()
@@ -58,7 +58,8 @@
     provider: 'github' | 'google' | 'apple' | 'discord',
   ) => {
     isLoading.value = true
-    await providerLogin(provider)
+    // await providerLogin(provider)
+    await userStore.providerLogin(provider)
     userStore.authModalOff()
     reset('register')
     isLoading.value = false

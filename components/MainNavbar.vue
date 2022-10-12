@@ -9,7 +9,6 @@
   }
 
   const handleLogout = async () => {
-    // await logout()
     await userStore.logout()
     userStore.authModalOff()
     return navigateTo('/')
