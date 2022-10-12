@@ -2,7 +2,7 @@
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userStore'
-  import { emailLogin } from '@/composables/useSupabase'
+  // import { emailLogin } from '@/composables/useSupabase'
 
   const emit = defineEmits(['loginEvent'])
 
@@ -60,7 +60,9 @@
 
   const handleLogin = async (value: { email: string; password: string }) => {
     isLoading.value = true
-    await emailLogin(value)
+    // TODO: remove this line
+    // await emailLogin(value)
+    await userStore.emailLogin(value)
     userStore.authModalOff()
     reset('login')
     isLoading.value = false

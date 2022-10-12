@@ -16,41 +16,42 @@ export const useAuth = () => {
   })
 }
 
-export const emailLogin = async (value: {
-  email: string
-  password: string
-}) => {
-  const userStore = useSupabaseUserStore()
-  const client = useSupabaseClient()
+// TODO: remove this function
+// export const emailLogin = async (value: {
+//   email: string
+//   password: string
+// }) => {
+//   const userStore = useSupabaseUserStore()
+//   const client = useSupabaseClient()
 
-  try {
-    const { user, error } = await client.auth.signIn({
-      email: value.email,
-      password: value.password,
-    })
-    if (user) {
-      const { data } = await client
-        .from('profiles')
-        .select('username,id')
-        .eq('id', user.id)
-        .single()
+//   try {
+//     const { user, error } = await client.auth.signIn({
+//       email: value.email,
+//       password: value.password,
+//     })
+//     if (user) {
+//       const { data } = await client
+//         .from('profiles')
+//         .select('username,id')
+//         .eq('id', user.id)
+//         .single()
 
-      userStore.uid = data.id
-      userStore.name = data.username
-      userStore.email = user.email
-      userStore.error = ''
-      if (user.confirmed_at) {
-        userStore.confirmed = true
-      }
-    }
-    if (error) throw error
-  } catch (error) {
-    userStore.name = ''
-    userStore.email = ''
-    userStore.error = error.message
-    userStore.confirmed = false
-  }
-}
+//       userStore.uid = data.id
+//       userStore.name = data.username
+//       userStore.email = user.email
+//       userStore.error = ''
+//       if (user.confirmed_at) {
+//         userStore.confirmed = true
+//       }
+//     }
+//     if (error) throw error
+//   } catch (error) {
+//     userStore.name = ''
+//     userStore.email = ''
+//     userStore.error = error.message
+//     userStore.confirmed = false
+//   }
+// }
 
 export const emailRegister = async (value: {
   email: string

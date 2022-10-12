@@ -40,6 +40,39 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       this.authModalOpen = false
     },
 
+    async emailLogin(value: { email: string; password: string }) {
+      const userStore = useSupabaseUserStore()
+      const client = useSupabaseClient()
+
+      try {
+        const { user, error } = await client.auth.signIn({
+          email: value.email,
+          password: value.password,
+        })
+        if (user) {
+          const { data } = await client
+            .from('profiles')
+            .select('username,id')
+            .eq('id', user.id)
+            .single()
+
+          userStore.uid = data.id
+          userStore.name = data.username
+          userStore.email = user.email
+          userStore.error = ''
+          if (user.confirmed_at) {
+            userStore.confirmed = true
+          }
+        }
+        if (error) throw error
+      } catch (error) {
+        userStore.name = ''
+        userStore.email = ''
+        userStore.error = error.message
+        userStore.confirmed = false
+      }
+    },
+
     setStore(
       uid: string,
       email: string,
