@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
-  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { useSupabaseUserStore } from '~~/stores/userStore'
   import { emailLogin } from '@/composables/useSupabase'
 
   const emit = defineEmits(['loginEvent'])

@@ -3,7 +3,7 @@
   import autoAnimate from '@formkit/auto-animate'
   import { reset } from '@formkit/core'
   import { POSITION, useToast } from 'vue-toastification'
-  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { useSupabaseUserStore } from '~~/stores/userStore'
 
   // const emit = defineEmits(['update:path', 'upload'])
   const userStore = useSupabaseUserStore()

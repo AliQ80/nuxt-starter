@@ -1,5 +1,5 @@
 import type { User } from '@supabase/gotrue-js'
-import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+import { useSupabaseUserStore } from '~~/stores/userStore'
 
 export const useAuth = () => {
   const { $supabase } = useNuxtApp()

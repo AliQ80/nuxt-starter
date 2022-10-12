@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useSupabaseUserStore } from '~~/stores/userSupaStore'
+  import { useSupabaseUserStore } from '~~/stores/userStore'
   import { logout } from '~~/composables/useSupabase'
 
   const userStore = useSupabaseUserStore()
