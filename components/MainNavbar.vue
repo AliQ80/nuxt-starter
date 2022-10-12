@@ -4,7 +4,7 @@
   const userStore = useSupabaseUserStore()
 
   const openModal = () => {
-    userStore.reset()
+    userStore.resetStore()
     userStore.authModalOn()
   }
 

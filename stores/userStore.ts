@@ -31,7 +31,21 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       this.authModalOpen = true
     },
 
-    reset() {
+    setStore(
+      uid: string,
+      email: string,
+      name: string,
+      auth: boolean,
+      error: string,
+    ) {
+      this.uid = uid
+      this.email = email
+      this.name = name
+      this.confirmed = auth
+      this.error = error
+    },
+
+    resetStore() {
       this.uid = ''
       this.email = ''
       this.name = ''
@@ -127,20 +141,6 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
         this.error = error.message
         this.confirmed = false
       }
-    },
-
-    setStore(
-      uid: string,
-      email: string,
-      name: string,
-      auth: boolean,
-      error: string,
-    ) {
-      this.uid = uid
-      this.email = email
-      this.name = name
-      this.confirmed = auth
-      this.error = error
     },
 
     async logout() {
