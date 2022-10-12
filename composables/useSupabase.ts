@@ -53,38 +53,37 @@ export const useAuth = () => {
 //   }
 // }
 
-export const emailRegister = async (value: {
-  email: string
-  password: string
-}) => {
-  const userStore = useSupabaseUserStore()
-  const client = useSupabaseClient()
-  try {
-    const { user, error } = await client.auth.signUp({
-      email: value.email,
-      password: value.password,
-    })
-    if (user) {
-      if (user.confirmed_at) {
-        userStore.email = user.email
-        userStore.error = ''
-        userStore.confirmed = true
-      }
-      if (user.confirmation_sent_at) {
-        userStore.email = user.email
-        userStore.error = ''
-        userStore.confirmed = false
-        // navigateTo('/verify')
-      }
-    }
-    if (error) throw error
-  } catch (error) {
-    userStore.email = ''
-    userStore.name = ''
-    userStore.error = error.message
-    userStore.confirmed = false
-  }
-}
+// export const emailRegister = async (value: {
+//   email: string
+//   password: string
+// }) => {
+//   const userStore = useSupabaseUserStore()
+//   const client = useSupabaseClient()
+//   try {
+//     const { user, error } = await client.auth.signUp({
+//       email: value.email,
+//       password: value.password,
+//     })
+//     if (user) {
+//       if (user.confirmed_at) {
+//         userStore.email = user.email
+//         userStore.error = ''
+//         userStore.confirmed = true
+//       }
+//       if (user.confirmation_sent_at) {
+//         userStore.email = user.email
+//         userStore.error = ''
+//         userStore.confirmed = false
+//       }
+//     }
+//     if (error) throw error
+//   } catch (error) {
+//     userStore.email = ''
+//     userStore.name = ''
+//     userStore.error = error.message
+//     userStore.confirmed = false
+//   }
+// }
 
 export const providerLogin = async (
   provider: 'github' | 'google' | 'apple' | 'discord',

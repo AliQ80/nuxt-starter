@@ -41,9 +41,7 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
     },
 
     async emailLogin(value: { email: string; password: string }) {
-      const userStore = useSupabaseUserStore()
       const client = useSupabaseClient()
-
       try {
         const { user, error } = await client.auth.signIn({
           email: value.email,
@@ -56,20 +54,48 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
             .eq('id', user.id)
             .single()
 
-          userStore.uid = data.id
-          userStore.name = data.username
-          userStore.email = user.email
-          userStore.error = ''
+          this.uid = data.id
+          this.name = data.username
+          this.email = user.email
+          this.error = ''
           if (user.confirmed_at) {
-            userStore.confirmed = true
+            this.confirmed = true
           }
         }
         if (error) throw error
       } catch (error) {
-        userStore.name = ''
-        userStore.email = ''
-        userStore.error = error.message
-        userStore.confirmed = false
+        this.name = ''
+        this.email = ''
+        this.error = error.message
+        this.confirmed = false
+      }
+    },
+
+    async emailRegister(value: { email: string; password: string }) {
+      const client = useSupabaseClient()
+      try {
+        const { user, error } = await client.auth.signUp({
+          email: value.email,
+          password: value.password,
+        })
+        if (user) {
+          if (user.confirmed_at) {
+            this.email = user.email
+            this.error = ''
+            this.confirmed = true
+          }
+          if (user.confirmation_sent_at) {
+            this.email = user.email
+            this.error = ''
+            this.confirmed = false
+          }
+        }
+        if (error) throw error
+      } catch (error) {
+        this.email = ''
+        this.name = ''
+        this.error = error.message
+        this.confirmed = false
       }
     },
 
