@@ -4,24 +4,27 @@
   import { reset } from '@formkit/core'
   import { POSITION, useToast } from 'vue-toastification'
   import { useSupabaseUserStore } from '~~/stores/userStore'
+  import { useProfileStore } from '@/stores/profileStore'
 
-  // const emit = defineEmits(['update:path', 'upload'])
   const userStore = useSupabaseUserStore()
+  const profileStore = useProfileStore()
   const client = useSupabaseClient()
+
   const isLoading = ref(false)
   const toast = useToast()
   const editProfile = ref(false)
-
-  const username = ref('')
-  const firstName = ref('')
-  const lastName = ref('')
-  const initials = ref('')
-  const description = ref('')
-  const avatarPath = ref('')
-  const avatarUrl = ref('')
-  const currentAvatar = ref('')
   const files = ref()
 
+  // const username = ref('')
+  // const firstName = ref('')
+  // const lastName = ref('')
+  // const initials = ref('')
+  // const description = ref('')
+  // const avatarUrl = ref('')
+  // const currentAvatar = ref('')
+
+  const avatarPath = ref('')
+  avatarPath.value = profileStore.avatarPath
   // --- auto animate form ---
   const pform = ref()
 
@@ -49,14 +52,14 @@
         .eq('id', user.value.id)
         .single()
       if (data) {
-        username.value = data.username
-        firstName.value = data.first_name
-        lastName.value = data.last_name
-        initials.value = firstName.value
-          .charAt(0)
-          .concat(lastName.value.charAt(0))
-        description.value = data.description
-        avatarPath.value = data.avatar_url
+        profileStore.username = data.username
+        profileStore.firstName = data.first_name
+        profileStore.lastName = data.last_name
+        // initials.value = firstName.value
+        //   .charAt(0)
+        //   .concat(lastName.value.charAt(0))
+        profileStore.description = data.description
+        profileStore.avatarPath = data.avatar_url
       }
       if (error) throw error
     } catch (error) {
@@ -87,7 +90,7 @@
       .from('avatars')
       .upload(filePath, avatarImg)
     if (data) {
-      avatarPath.value = filePath
+      profileStore.avatarPath = filePath
       updateProfile()
       toast.success('Avatar was Successfuly set', {
         timeout: 7000,
@@ -101,9 +104,9 @@
     try {
       const { data, error } = await client.storage
         .from('avatars')
-        .download(avatarPath.value)
+        .download(profileStore.avatarPath)
       if (error) throw error
-      avatarUrl.value = URL.createObjectURL(data)
+      profileStore.avatarUrl = URL.createObjectURL(data)
     } catch (error) {
       console.log(error.message)
       if (error.message === 'The resource was not found') {
@@ -136,7 +139,7 @@
   ) => {
     const { data, error: deleteError } = await client.storage
       .from('avatars')
-      .remove([currentAvatar.value])
+      .remove([profileStore.currentAvatar])
     if (data) {
       uploadNewImage(filePath, avatarImg)
     }
@@ -149,11 +152,11 @@
       const user = useSupabaseUser()
       const updates = {
         id: user.value.id,
-        username: username.value,
-        first_name: firstName.value,
-        last_name: lastName.value,
-        description: description.value,
-        avatar_url: avatarPath.value,
+        username: profileStore.username,
+        first_name: profileStore.firstName,
+        last_name: profileStore.lastName,
+        description: profileStore.description,
+        avatar_url: profileStore.avatarPath,
         updated_at: new Date(),
       }
       const { error } = await client.from('profiles').upsert(updates, {
@@ -188,8 +191,8 @@
         .select(`avatar_url`)
         .eq('id', user.value.id)
         .single()
-      currentAvatar.value = data.avatar_url
-      if (currentAvatar.value !== 'NULL') {
+      profileStore.currentAvatar = data.avatar_url
+      if (profileStore.currentAvatar !== 'NULL') {
         // --- update photo ---
         console.log('--- update photo ---')
         updateImage(filePath, avatarImg.file)
@@ -224,13 +227,15 @@
             <div class="flex justify-center">
               <div class="avatar online placeholder mb-4 w-32">
                 <div
-                  v-if="!avatarUrl"
+                  v-if="!profileStore.avatarUrl"
                   class="bg-neutral-focus text-neutral-content ring-primary ring-offset-base-100 mx-auto w-28 rounded-full ring ring-offset-2">
-                  <span class="text-5xl font-extrabold">{{ initials }}</span>
+                  <span class="text-5xl font-extrabold">{{
+                    profileStore.getInitials
+                  }}</span>
                 </div>
                 <div v-else>
                   <img
-                    :src="avatarUrl"
+                    :src="profileStore.avatarUrl"
                     alt="avatar"
                     class="mx-auto aspect-square rounded-full dark:bg-gray-500" />
                 </div>
@@ -238,15 +243,17 @@
             </div>
           </template>
           <template #username>
-            <div class="font-sans font-bold">{{ username }}</div>
+            <div class="font-sans font-bold">{{ profileStore.username }}</div>
           </template>
           <template #name>
             <div class="font-sans font-extralight">
-              {{ firstName }} {{ lastName }}
+              {{ profileStore.firstName }} {{ profileStore.lastName }}
             </div>
           </template>
           <template #description>
-            <div class="font-sans font-extralight">{{ description }}</div>
+            <div class="font-sans font-extralight">
+              {{ profileStore.description }}
+            </div>
           </template>
         </ProfileCard>
         <div class="my-2 flex justify-center">
@@ -276,7 +283,7 @@
             :actions="false"
             @submit="updateProfile">
             <FormKit
-              v-model="username"
+              v-model="profileStore.username"
               type="text"
               name="username"
               label="Username"
@@ -285,7 +292,7 @@
             <div class="flex lg:w-96">
               <div class="mr-4 sm:w-32 lg:w-48">
                 <FormKit
-                  v-model="firstName"
+                  v-model="profileStore.firstName"
                   type="text"
                   name="firstName"
                   label="First Name"
@@ -294,7 +301,7 @@
               </div>
               <div class="sm:w-32 lg:w-48">
                 <FormKit
-                  v-model="lastName"
+                  v-model="profileStore.lastName"
                   type="text"
                   name="lastName"
                   label="Last Name"
@@ -303,7 +310,7 @@
               </div>
             </div>
             <FormKit
-              v-model="description"
+              v-model="profileStore.description"
               type="text"
               name="description"
               label="description"
