@@ -10,7 +10,6 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       name: '',
       confirmed: false,
       error: '',
-      authModalOpen: false,
     }
   },
 
@@ -20,17 +19,9 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
     getName: (state) => state.name,
     getConfirmed: (state) => state.confirmed,
     getError: (state) => state.error,
-    getAuthModal: (state) => state.authModalOpen,
   },
 
   actions: {
-    authModalOff() {
-      this.authModalOpen = false
-    },
-    authModalOn() {
-      this.authModalOpen = true
-    },
-
     setStore(
       uid: string,
       email: string,

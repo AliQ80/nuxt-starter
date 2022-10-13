@@ -2,6 +2,9 @@
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userStore'
+  import { useModalStore } from '@/stores/modalStore'
+
+  const modalStore = useModalStore()
 
   const emit = defineEmits(['loginEvent'])
 
@@ -29,7 +32,7 @@
   ) => {
     isLoading.value = true
     await userStore.providerLogin(provider)
-    userStore.authModalOff()
+    modalStore.authModalOff()
     reset('register')
     isLoading.value = false
     checkLoginStatus()
@@ -58,7 +61,7 @@
   const handleLogin = async (value: { email: string; password: string }) => {
     isLoading.value = true
     await userStore.emailLogin(value)
-    userStore.authModalOff()
+    modalStore.authModalOff()
     reset('login')
     isLoading.value = false
     checkLoginStatus()
