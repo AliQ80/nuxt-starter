@@ -24,7 +24,7 @@
   // const currentAvatar = ref('')
 
   const avatarPath = ref('')
-  avatarPath.value = profileStore.avatarPath
+
   // --- auto animate form ---
   const pform = ref()
 
@@ -60,6 +60,7 @@
         //   .concat(lastName.value.charAt(0))
         profileStore.description = data.description
         profileStore.avatarPath = data.avatar_url
+        avatarPath.value = profileStore.avatarPath
       }
       if (error) throw error
     } catch (error) {
@@ -107,6 +108,10 @@
         .download(profileStore.avatarPath)
       if (error) throw error
       profileStore.avatarUrl = URL.createObjectURL(data)
+      console.log(
+        `🚀 => file: EditProfile.vue => line 110 => downloadImage => URL.createObjectURL(data)`,
+        URL.createObjectURL(data),
+      )
     } catch (error) {
       console.log(error.message)
       if (error.message === 'The resource was not found') {
