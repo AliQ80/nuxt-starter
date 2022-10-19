@@ -1,4 +1,3 @@
-<!-- eslint-disable no-console -->
 <script setup lang="ts">
   import autoAnimate from '@formkit/auto-animate'
   import { reset } from '@formkit/core'
@@ -14,14 +13,6 @@
   const toast = useToast()
   const editProfile = ref(false)
   const files = ref()
-
-  // const username = ref('')
-  // const firstName = ref('')
-  // const lastName = ref('')
-  // const initials = ref('')
-  // const description = ref('')
-  // const avatarUrl = ref('')
-  // const currentAvatar = ref('')
 
   const avatarPath = ref('')
 
@@ -55,9 +46,6 @@
         profileStore.username = data.username
         profileStore.firstName = data.first_name
         profileStore.lastName = data.last_name
-        // initials.value = firstName.value
-        //   .charAt(0)
-        //   .concat(lastName.value.charAt(0))
         profileStore.description = data.description
         profileStore.avatarPath = data.avatar_url
         avatarPath.value = profileStore.avatarPath
@@ -98,6 +86,7 @@
         position: POSITION.BOTTOM_CENTER,
       })
     }
+    downloadImage()
     if (uploadError) throw uploadError
   }
 
@@ -108,12 +97,7 @@
         .download(profileStore.avatarPath)
       if (error) throw error
       profileStore.avatarUrl = URL.createObjectURL(data)
-      console.log(
-        `🚀 => file: EditProfile.vue => line 110 => downloadImage => URL.createObjectURL(data)`,
-        URL.createObjectURL(data),
-      )
     } catch (error) {
-      console.log(error.message)
       if (error.message === 'The resource was not found') {
         toast.info('You have not set a profile avatar', {
           timeout: 7000,
@@ -199,11 +183,9 @@
       profileStore.currentAvatar = data.avatar_url
       if (profileStore.currentAvatar !== 'NULL') {
         // --- update photo ---
-        console.log('--- update photo ---')
         updateImage(filePath, avatarImg.file)
       } else {
         // --- upload new photo ---
-        console.log('--- upload new photo ---')
         uploadNewImage(filePath, avatarImg.file)
       }
       if (error) throw error

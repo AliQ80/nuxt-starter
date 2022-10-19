@@ -10,8 +10,8 @@ export const useProfileStore = defineStore('ProfileStore', {
       lastName: '',
       description: '',
       avatarPath: '',
-      avatarUrl: '',
       currentAvatar: '',
+      avatarUrl: '',
     }
   },
 
@@ -20,14 +20,7 @@ export const useProfileStore = defineStore('ProfileStore', {
       state.firstName.charAt(0).concat(state.lastName.charAt(0)),
   },
 
-  actions: {
-    // authModalOff() {
-    //   this.authModalOpen = false
-    // },
-    // authModalOn() {
-    //   this.authModalOpen = true
-    // },
-  },
+  actions: {},
 
   persist: true,
 })
