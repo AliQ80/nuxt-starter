@@ -2,10 +2,10 @@
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userStore'
-  import { emailRegister, providerLogin } from '@/composables/useSupabase'
+  import { useModalStore } from '@/stores/modalStore'
 
+  const modalStore = useModalStore()
   const userStore = useSupabaseUserStore()
-  // const client = useSupabaseClient()
 
   // --- auto animate form ---
   const ccform = ref()
@@ -34,6 +34,8 @@
       return navigateTo('/')
     }
 
+    // TODO: check on navigate to /verify redundency
+
     if (userStore.email && !userStore.confirmed) {
       reset('registration')
       emit('registerEvent', 'registration', 'success')
@@ -55,8 +57,8 @@
     provider: 'github' | 'google' | 'apple' | 'discord',
   ) => {
     isLoading.value = true
-    await providerLogin(provider)
-    userStore.authModalOff()
+    await userStore.providerLogin(provider)
+    modalStore.authModalOff()
     reset('register')
     isLoading.value = false
     checkLoginStatus()
@@ -66,8 +68,8 @@
 
   const handleSignup = async (value: { email: string; password: string }) => {
     isLoading.value = true
-    await emailRegister(value)
-    userStore.authModalOff()
+    await userStore.emailRegister(value)
+    modalStore.authModalOff()
     reset('register')
     isLoading.value = false
     checkLoginStatus()

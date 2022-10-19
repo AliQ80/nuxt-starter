@@ -1,17 +1,18 @@
 <script setup lang="ts">
   import { useSupabaseUserStore } from '~~/stores/userStore'
-  import { logout } from '~~/composables/useSupabase'
+  import { useModalStore } from '@/stores/modalStore'
 
   const userStore = useSupabaseUserStore()
+  const modalStore = useModalStore()
 
   const openModal = () => {
-    userStore.reset()
-    userStore.authModalOn()
+    userStore.resetStore()
+    modalStore.authModalOn()
   }
 
   const handleLogout = async () => {
-    await logout()
-    userStore.authModalOff()
+    await userStore.logout()
+    modalStore.authModalOff()
     return navigateTo('/')
   }
 </script>
@@ -151,16 +152,16 @@
 
       <!-- Start Modal -->
       <div
-        v-if="userStore.getAuthModal"
+        v-if="modalStore.getAuthModal"
         id="modal-start"
         class="modal"
-        :class="{ 'modal-open': userStore.getAuthModal }">
+        :class="{ 'modal-open': modalStore.getAuthModal }">
         <div class="modal-box relative">
           <NuxtLink
             to="#"
             for="modal-login"
             class="btn btn-sm btn-circle absolute right-2 top-2"
-            @click="userStore.authModalOff()">
+            @click="modalStore.authModalOff()">
             ✕
           </NuxtLink>
           <FormStart />

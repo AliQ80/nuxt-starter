@@ -2,13 +2,13 @@
   import { reset } from '@formkit/core'
   import autoAnimate from '@formkit/auto-animate'
   import { useSupabaseUserStore } from '~~/stores/userStore'
-  import { emailLogin } from '@/composables/useSupabase'
+  import { useModalStore } from '@/stores/modalStore'
+
+  const modalStore = useModalStore()
 
   const emit = defineEmits(['loginEvent'])
 
-  // const client = useSupabaseClient()
   const userStore = useSupabaseUserStore()
-  // const errorCode = ref('')
   const isLoading = ref(false)
 
   // --- auto animate form ---
@@ -31,8 +31,8 @@
     provider: 'github' | 'google' | 'apple' | 'discord',
   ) => {
     isLoading.value = true
-    await providerLogin(provider)
-    userStore.authModalOff()
+    await userStore.providerLogin(provider)
+    modalStore.authModalOff()
     reset('register')
     isLoading.value = false
     checkLoginStatus()
@@ -60,8 +60,8 @@
 
   const handleLogin = async (value: { email: string; password: string }) => {
     isLoading.value = true
-    await emailLogin(value)
-    userStore.authModalOff()
+    await userStore.emailLogin(value)
+    modalStore.authModalOff()
     reset('login')
     isLoading.value = false
     checkLoginStatus()
