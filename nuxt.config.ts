@@ -62,6 +62,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@formkit/nuxt',
     '@nuxtjs/supabase',
+    'nuxt-icons',
   ],
   app: {
     head: {

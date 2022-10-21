@@ -207,7 +207,7 @@
 
 <template>
   <div>
-    <div class="mx-5 lg:flex lg:justify-center">
+    <div class="mx-5 flex flex-wrap justify-center">
       <div class="mx-10 mb-10">
         <ProfileCard>
           <template #avatar>
