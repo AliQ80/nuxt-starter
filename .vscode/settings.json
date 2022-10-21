@@ -34,7 +34,7 @@
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "conventionalCommits.scopes": [
-    "firebase",
+    "supabase",
     "pinia",
     "auth",
     "test",
