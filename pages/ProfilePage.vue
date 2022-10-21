@@ -13,7 +13,6 @@
     <div class="prose my-10 mx-auto flex justify-center">
       <h1>Update Your Profile</h1>
     </div>
-    <!-- <Account /> -->
     <EditProfile />
   </div>
 </template>
