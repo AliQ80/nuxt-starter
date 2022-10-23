@@ -48,7 +48,10 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
     async emailLogin(value: { email: string; password: string }) {
       const client = useSupabaseClient()
       try {
-        const { user, error } = await client.auth.signIn({
+        const {
+          data: { user },
+          error,
+        } = await client.auth.signInWithPassword({
           email: value.email,
           password: value.password,
         })
@@ -81,21 +84,21 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       const client = useSupabaseClient()
 
       try {
-        const { user, error } = await client.auth.signIn({ provider })
-        if (user) {
-          const { data } = await client
-            .from('profiles')
-            .select('username')
-            .eq('id', user.id)
-            .single()
+        const { data, error } = await client.auth.signInWithOAuth({ provider })
+        if (data) {
+          // const { data } = await client
+          // client.from('profiles')
+          // .select('username')
+          // .eq('id', user.id)
+          // .single()
 
-          userStore.name = data.username
-          userStore.email = user.email
+          // userStore.name = data.username
+          // userStore.email = user.email
           userStore.error = ''
 
-          if (user.role === 'authenticated') {
-            userStore.confirmed = true
-          }
+          // if (user.role === 'authenticated') {
+          //   userStore.confirmed = true
+          // }
         }
         if (error) throw error
       } catch (error) {
@@ -109,22 +112,10 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
     async emailRegister(value: { email: string; password: string }) {
       const client = useSupabaseClient()
       try {
-        const { user, error } = await client.auth.signUp({
+        const { error } = await client.auth.signUp({
           email: value.email,
           password: value.password,
         })
-        if (user) {
-          if (user.confirmed_at) {
-            this.email = user.email
-            this.error = ''
-            this.confirmed = true
-          }
-          if (user.confirmation_sent_at) {
-            this.email = user.email
-            this.error = ''
-            this.confirmed = false
-          }
-        }
         if (error) throw error
       } catch (error) {
         this.email = ''
