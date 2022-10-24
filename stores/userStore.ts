@@ -116,6 +116,7 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
           email: value.email,
           password: value.password,
         })
+        this.email = value.email
         if (error) throw error
       } catch (error) {
         this.email = ''
