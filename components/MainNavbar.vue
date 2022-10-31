@@ -2,6 +2,11 @@
   import { useSupabaseUserStore } from '~~/stores/userStore'
   import { useModalStore } from '@/stores/modalStore'
 
+  const colorMode = useColorMode()
+  // colorMode.preference = 'dark'
+  console.log('colorMode.preference: ', colorMode.preference)
+  console.log('colorMode.value: ', colorMode.value)
+
   const userStore = useSupabaseUserStore()
   const modalStore = useModalStore()
 
@@ -56,10 +61,11 @@
 
       <label class="swap swap-rotate mx-2">
         <!-- this hidden checkbox controls the state -->
-        <input type="checkbox" />
+        <input type="checkbox" name="darkModeSwap" />
 
         <!-- sun icon -->
         <svg
+          value="light"
           class="swap-on h-8 w-8 fill-current"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24">
@@ -69,6 +75,7 @@
 
         <!-- moon icon -->
         <svg
+          value="dark"
           class="swap-off h-8 w-8 fill-current"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24">
