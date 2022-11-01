@@ -148,9 +148,7 @@
         avatar_url: profileStore.avatarPath,
         updated_at: new Date(),
       }
-      const { error } = await client.from('profiles').upsert(updates, {
-        returning: 'minimal', // Don't return the value after inserting
-      })
+      const { error } = await client.from('profiles').upsert(updates).select()
       if (error) throw error
     } catch (error) {
       toast.error(error.message, {

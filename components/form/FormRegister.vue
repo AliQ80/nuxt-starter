@@ -119,7 +119,7 @@
     </div>
 
     <FormKit
-      id="registration"
+      id="register"
       type="form"
       form-class="lg:w-96"
       submit-label="Register"
