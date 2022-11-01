@@ -20,6 +20,48 @@
     modalStore.authModalOff()
     return navigateTo('/')
   }
+
+  const toggleTheme = () => {
+    const themeButton = document.getElementById(
+      'themeToggle',
+    ) as HTMLInputElement | null
+    if (themeButton.checked) {
+      colorMode.preference = 'cupcake'
+    } else {
+      colorMode.preference = 'dark'
+    }
+  }
+  const themes = [
+    'light',
+    'dark',
+    'cupcake',
+    'bumblebee',
+    'emerald',
+    'corporate',
+    'synthwave',
+    'retro',
+    'cyberpunk',
+    'valentine',
+    'halloween',
+    'garden',
+    'forest',
+    'aqua',
+    'lofi',
+    'pastel',
+    'fantasy',
+    'wireframe',
+    'black',
+    'luxury',
+    'dracula',
+    'cmyk',
+    'autumn',
+    'business',
+    'acid',
+    'lemonade',
+    'night',
+    'coffee',
+    'winter',
+  ]
 </script>
 
 <template>
@@ -59,13 +101,16 @@
         Nuxt3 Starter
       </NuxtLink>
 
+      <select v-model="$colorMode.preference" class="select">
+        <option v-for="theme of themes" :key="theme">{{ theme }}</option>
+      </select>
+
       <label class="swap swap-rotate mx-2">
         <!-- this hidden checkbox controls the state -->
-        <input type="checkbox" name="darkModeSwap" />
+        <input id="themeToggle" type="checkbox" @click="toggleTheme" />
 
         <!-- sun icon -->
         <svg
-          value="light"
           class="swap-on h-8 w-8 fill-current"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24">
@@ -75,7 +120,6 @@
 
         <!-- moon icon -->
         <svg
-          value="dark"
           class="swap-off h-8 w-8 fill-current"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24">
