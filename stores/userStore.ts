@@ -128,13 +128,15 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
 
     async logout() {
       const client = useSupabaseClient()
-
-      this.email = ''
-      this.name = ''
-      this.confirmed = false
-      this.error = ''
-
       await client.auth.signOut()
+
+      const sbAccessCookie = useCookie('sb-access-token')
+      sbAccessCookie.value = null
+
+      const sbRefreshCookie = useCookie('sb-refresh-token')
+      sbRefreshCookie.value = null
+
+      this.$reset()
     },
   },
 
