@@ -126,6 +126,17 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       }
     },
 
+    async resetPassword() {
+      try {
+        const client = useSupabaseClient()
+        const { data, error } = await client.auth.resetPasswordForEmail(
+          this.email,
+        )
+        console.log('reset password data: ', data)
+        if (error) throw error
+      } catch (error) {}
+    },
+
     async logout() {
       const client = useSupabaseClient()
       await client.auth.signOut()

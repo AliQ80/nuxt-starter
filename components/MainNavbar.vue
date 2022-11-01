@@ -176,7 +176,7 @@
                 <NuxtLink to="/profile"> 🔘 Profile </NuxtLink>
               </li>
               <li>
-                <NuxtLink to="/secret"> 🔘 Settings </NuxtLink>
+                <NuxtLink to="/settings"> 🔘 Settings </NuxtLink>
               </li>
               <li class="border-t-2 border-indigo-500">
                 <NuxtLink
