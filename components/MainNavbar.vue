@@ -2,6 +2,11 @@
   import { useSupabaseUserStore } from '~~/stores/userStore'
   import { useModalStore } from '@/stores/modalStore'
 
+  const colorMode = useColorMode()
+  // colorMode.preference = 'dark'
+  console.log('colorMode.preference: ', colorMode.preference)
+  console.log('colorMode.value: ', colorMode.value)
+
   const userStore = useSupabaseUserStore()
   const modalStore = useModalStore()
 
@@ -15,6 +20,48 @@
     modalStore.authModalOff()
     return navigateTo('/')
   }
+
+  const toggleTheme = () => {
+    const themeButton = document.getElementById(
+      'themeToggle',
+    ) as HTMLInputElement | null
+    if (themeButton.checked) {
+      colorMode.preference = 'cupcake'
+    } else {
+      colorMode.preference = 'dark'
+    }
+  }
+  const themes = [
+    'light',
+    'dark',
+    'cupcake',
+    'bumblebee',
+    'emerald',
+    'corporate',
+    'synthwave',
+    'retro',
+    'cyberpunk',
+    'valentine',
+    'halloween',
+    'garden',
+    'forest',
+    'aqua',
+    'lofi',
+    'pastel',
+    'fantasy',
+    'wireframe',
+    'black',
+    'luxury',
+    'dracula',
+    'cmyk',
+    'autumn',
+    'business',
+    'acid',
+    'lemonade',
+    'night',
+    'coffee',
+    'winter',
+  ]
 </script>
 
 <template>
@@ -54,9 +101,13 @@
         Nuxt3 Starter
       </NuxtLink>
 
+      <select v-model="$colorMode.preference" class="select">
+        <option v-for="theme of themes" :key="theme">{{ theme }}</option>
+      </select>
+
       <label class="swap swap-rotate mx-2">
         <!-- this hidden checkbox controls the state -->
-        <input type="checkbox" />
+        <input id="themeToggle" type="checkbox" @click="toggleTheme" />
 
         <!-- sun icon -->
         <svg

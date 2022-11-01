@@ -15,6 +15,32 @@ module.exports = {
         lobster: "'Lobster', cursive",
       },
     },
+    darkSelector: '.mode-dark',
   },
-  plugins: [require('daisyui'), require('@tailwindcss/typography')],
+  variants: {
+    backgroundColor: [
+      'dark',
+      'dark-hover',
+      'dark-group-hover',
+      'dark-even',
+      'dark-odd',
+      'hover',
+      'responsive',
+    ],
+    borderColor: [
+      'dark',
+      'dark-focus',
+      'dark-focus-within',
+      'hover',
+      'responsive',
+    ],
+    textColor: ['dark', 'dark-hover', 'dark-active', 'hover', 'responsive'],
+  },
+  darkMode: 'class',
+  plugins: [
+    require('daisyui'),
+    require('@tailwindcss/typography'),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('tailwindcss-dark-mode')(),
+  ],
 }
