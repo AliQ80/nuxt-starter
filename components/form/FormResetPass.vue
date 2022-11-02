@@ -3,6 +3,7 @@
   import { useSupabaseUserStore } from '~~/stores/userStore'
 
   const userStore = useSupabaseUserStore()
+  const isLoading = ref(false)
 
   // --- auto animate form ---
   const aaform = ref()
@@ -21,7 +22,9 @@
   })
 
   const handlePasswordReset = async (value: { password: string }) => {
+    isLoading.value = true
     await userStore.updatePassword(value.password)
+    isLoading.value = false
   }
 </script>
 
@@ -67,6 +70,14 @@
             @submit.prevent="handlePasswordReset" />
         </div>
       </FormKit>
+    </div>
+    <!-- Message for success or error -->
+    <div class="mb-5 h-5">
+      <div
+        v-show="isLoading"
+        class="mx-auto grid w-96 grid-cols-1 justify-items-center">
+        <progress class="progress progress-info mt-3 w-56" />
+      </div>
     </div>
   </div>
 </template>

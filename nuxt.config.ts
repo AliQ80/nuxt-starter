@@ -5,14 +5,6 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  runtimeConfig: {
-    // The private keys which are only available within server-side
-    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    // Keys within public, will be also exposed to the client-side
-    public: {
-      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    },
-  },
   build: {
     postcss: {
       postcssOptions: {
@@ -81,9 +73,9 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     },
   },
-  vite: {
-    vue: {
-      reactivityTransform: true,
-    },
-  },
+  // vite: {
+  //   vue: {
+  //     reactivityTransform: true,
+  //   },
+  // },
 })
