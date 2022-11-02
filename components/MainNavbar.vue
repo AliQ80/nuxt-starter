@@ -3,7 +3,6 @@
   import { useModalStore } from '@/stores/modalStore'
 
   const colorMode = useColorMode()
-  // colorMode.preference = 'dark'
 
   const userStore = useSupabaseUserStore()
   const modalStore = useModalStore()
@@ -19,16 +18,31 @@
     return navigateTo('/')
   }
 
+  const lightTheme = 'cupcake'
+  const darkTheme = 'dark'
+
+  const checkTheme = () => {
+    const themeButton = document.getElementById(
+      'themeToggle',
+    ) as HTMLInputElement | null
+    if (colorMode.preference === lightTheme) {
+      themeButton.checked = true
+    } else {
+      themeButton.checked = false
+    }
+  }
+
   const toggleTheme = () => {
     const themeButton = document.getElementById(
       'themeToggle',
     ) as HTMLInputElement | null
     if (themeButton.checked) {
-      colorMode.preference = 'cupcake'
+      colorMode.preference = lightTheme
     } else {
-      colorMode.preference = 'dark'
+      colorMode.preference = darkTheme
     }
   }
+
   const themes = [
     'light',
     'dark',
@@ -60,6 +74,9 @@
     'coffee',
     'winter',
   ]
+  onMounted(() => {
+    checkTheme()
+  })
 </script>
 
 <template>
