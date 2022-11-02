@@ -8,8 +8,9 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       uid: '',
       email: '',
       name: '',
-      confirmed: false,
       error: '',
+      confirmed: false,
+      resetPasswordSent: false,
     }
   },
 
@@ -34,15 +35,6 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
       this.name = name
       this.confirmed = auth
       this.error = error
-    },
-
-    resetStore() {
-      this.uid = ''
-      this.email = ''
-      this.name = ''
-      this.confirmed = false
-      this.error = ''
-      this.authModalOpen = false
     },
 
     async emailLogin(value: { email: string; password: string }) {
@@ -131,10 +123,41 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
         const client = useSupabaseClient()
         const { data, error } = await client.auth.resetPasswordForEmail(
           this.email,
+          {
+            redirectTo: 'http://localhost:3000/resetpassword',
+          },
         )
-        console.log('reset password data: ', data)
+        if (data) {
+          this.resetPasswordSent = true
+        }
         if (error) throw error
-      } catch (error) {}
+      } catch (error) {
+        console.log(
+          `🚀 => file: userStore.ts => line 132 => resetPassword => error`,
+          error,
+        )
+      }
+    },
+
+    async updatePassword(newPassword: string) {
+      const client = useSupabaseClient()
+
+      try {
+        const { data, error } = await client.auth.updateUser({
+          password: newPassword,
+        })
+
+        if (data) {
+          // TODO: redirect to success
+        }
+
+        if (error) throw error
+      } catch (error) {
+        console.log(
+          `🚀 => file: userStore.ts => line 150 => updatePassword => error`,
+          error,
+        )
+      }
     },
 
     async logout() {

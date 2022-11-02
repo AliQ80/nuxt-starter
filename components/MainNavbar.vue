@@ -4,14 +4,12 @@
 
   const colorMode = useColorMode()
   // colorMode.preference = 'dark'
-  console.log('colorMode.preference: ', colorMode.preference)
-  console.log('colorMode.value: ', colorMode.value)
 
   const userStore = useSupabaseUserStore()
   const modalStore = useModalStore()
 
   const openModal = () => {
-    userStore.resetStore()
+    userStore.$reset()
     modalStore.authModalOn()
   }
 
