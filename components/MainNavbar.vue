@@ -3,15 +3,12 @@
   import { useModalStore } from '@/stores/modalStore'
 
   const colorMode = useColorMode()
-  // colorMode.preference = 'dark'
-  console.log('colorMode.preference: ', colorMode.preference)
-  console.log('colorMode.value: ', colorMode.value)
 
   const userStore = useSupabaseUserStore()
   const modalStore = useModalStore()
 
   const openModal = () => {
-    userStore.resetStore()
+    userStore.$reset()
     modalStore.authModalOn()
   }
 
@@ -21,16 +18,31 @@
     return navigateTo('/')
   }
 
+  const lightTheme = 'cupcake'
+  const darkTheme = 'dark'
+
+  const checkTheme = () => {
+    const themeButton = document.getElementById(
+      'themeToggle',
+    ) as HTMLInputElement | null
+    if (colorMode.preference === lightTheme) {
+      themeButton.checked = true
+    } else {
+      themeButton.checked = false
+    }
+  }
+
   const toggleTheme = () => {
     const themeButton = document.getElementById(
       'themeToggle',
     ) as HTMLInputElement | null
     if (themeButton.checked) {
-      colorMode.preference = 'cupcake'
+      colorMode.preference = lightTheme
     } else {
-      colorMode.preference = 'dark'
+      colorMode.preference = darkTheme
     }
   }
+
   const themes = [
     'light',
     'dark',
@@ -62,6 +74,9 @@
     'coffee',
     'winter',
   ]
+  onMounted(() => {
+    checkTheme()
+  })
 </script>
 
 <template>
@@ -176,7 +191,7 @@
                 <NuxtLink to="/profile"> 🔘 Profile </NuxtLink>
               </li>
               <li>
-                <NuxtLink to="/secret"> 🔘 Settings </NuxtLink>
+                <NuxtLink to="/settings"> 🔘 Settings </NuxtLink>
               </li>
               <li class="border-t-2 border-indigo-500">
                 <NuxtLink
