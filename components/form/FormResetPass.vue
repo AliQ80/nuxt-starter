@@ -77,6 +77,7 @@
         v-show="isLoading"
         class="mx-auto grid w-96 grid-cols-1 justify-items-center">
         <progress class="progress progress-info mt-3 w-56" />
+        // TODO: reset password sent success message
       </div>
     </div>
   </div>

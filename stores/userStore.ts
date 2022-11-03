@@ -132,10 +132,7 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
         }
         if (error) throw error
       } catch (error) {
-        console.log(
-          `🚀 => file: userStore.ts => line 132 => resetPassword => error`,
-          error,
-        )
+        // TODO: handle error
       }
     },
 
@@ -153,10 +150,7 @@ export const useSupabaseUserStore = defineStore('userSupaStore', {
 
         if (error) throw error
       } catch (error) {
-        console.log(
-          `🚀 => file: userStore.ts => line 150 => updatePassword => error`,
-          error,
-        )
+        // TODO: handle error
       }
     },
 
